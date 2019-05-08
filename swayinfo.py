@@ -13,6 +13,9 @@ License: GPL3
 Inspired by https://github.com/tknomanzr/scripts/blob/master/tint2/executors/cpu.py by William Bradley (@tknomanzr)
 """
 
+# 
+# ⌚⌛◷
+
 import sys
 import psutil
 import time
@@ -216,17 +219,17 @@ def main():
 
         if char == "a" and avg is not None:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else " "
             output += avg + "%" + separator
 
         if char == "q" and freqs is not None:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else " "
             output += freq_per_cpu(freqs)[0][:-1] + "GHz" + separator
 
         if char == "Q" and freqs is not None:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else " "
             result = freq_per_cpu(freqs)
             output += result[0][:-1] + "/" + str(result[1]) + "GHz" + separator
 
