@@ -31,6 +31,8 @@ set $WS8 "8: "
 set $Mon1 eDP-1
 set $Mon2 HDMI-A-1
 
+#font 'pango:Ubuntu Mono 12'
+
 #
 # Autostart
 #
@@ -49,7 +51,7 @@ set $term tilix
 
 set $editor mousepad
 set $browser chromium
-set $filemanager nautilus
+set $filemanager thunar
 
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
@@ -58,7 +60,9 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+#output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-85117.jpg fill
+
 #
 # Example configuration:
 #
@@ -244,7 +248,7 @@ bindsym $mod+u border none
     # Switch the current container between different layout styles
     bindsym $mod+Shift+t layout tabbed
     bindsym $mod+Shift+s layout stacking
-    bindsym $mod+Shift+h layout toggle split
+    bindsym $mod+Tab layout toggle split
 
     # Make the current focus fullscreen
     bindsym $mod+Shift+f fullscreen
@@ -318,7 +322,7 @@ assign [title="Tilix*"] → $WS5
 assign [class="(?i)(?:jetbrains*|codeblocks)"] → $WS8
 
 # focus, floating, & sticky
-for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable
+for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
 for_window [class="(?i)(?:pavucontrol|terminator|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
 for_window [window_role="(?i)(?:pop-up|setup)"] floating enable, focus
 for_window [title="Google Hangouts*"] floating disable, resize set 560
@@ -326,6 +330,7 @@ for_window [title="Google Hangouts*"] floating disable, resize set 560
 for_window [class="(?i)(?:codeblocks)"] focus
 for_window [title="Confirm*"] floating enable
 for_window [title="Chromium*"] border none
+for_window [title="xfce4-*"] border none
 
 #
 # Status Bar:
@@ -337,7 +342,8 @@ bar {
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     # status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
-    status_command while /home/piotr/PycharmProjects/swayinfo/tc.py -CgaMtfD -N; do sleep 1; done
+    # status_command while /home/piotr/PycharmProjects/swayinfo/tc.py -CgaMtfD -N; do sleep 1; done
+    status_command py3status
 
     colors {
         statusline #ffffff
@@ -353,7 +359,7 @@ bar {
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command while /home/piotr/PycharmProjects/swayinfo/swayinfo.py -CgaMtfD -N; do sleep 1; done
+    status_command while /home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N; do sleep 1; done
 
     colors {
         statusline #ffffff
