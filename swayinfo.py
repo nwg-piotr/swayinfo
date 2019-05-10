@@ -33,8 +33,8 @@ def main():
     draw_icons = False
 
     pcpu, avg, speed, freqs, temp, fans, b_time, memory, swap, disks_usage, which, ul, dl, xfer_start, xfer_finish, \
-        path_to_icon, c_name= None, None, None, None, None, None, None, None, None, None, None, None, None, None, \
-        None, None, None
+        path_to_icon, glyph, c_name= None, None, None, None, None, None, None, None, None, None, None, None, None, None, \
+        None, None, None, None
 
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == "-h" or sys.argv[i] == "--help":
@@ -155,6 +155,8 @@ def main():
             # We've not selected an icon previously. Now we have enough data.
             if draw_icons:
                 path_to_icon = net_icon(home, ul, dl)
+            else:
+                glyph = net_glyph(home, ul, dl)
         except:
             pass
 
@@ -219,40 +221,40 @@ def main():
 
         if char == "a" and avg is not None:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else ""
             output += avg + "%" + separator
 
         if char == "q" and freqs is not None:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else ""
             output += freq_per_cpu(freqs)[0][:-1] + "GHz" + separator
 
         if char == "Q" and freqs is not None:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else ""
             result = freq_per_cpu(freqs)
             output += result[0][:-1] + "/" + str(result[1]) + "GHz" + separator
 
         if char == "s" and speed is not None:
             if names:
-                output += c_name if c_name else "SPD: "
+                output += c_name if c_name else ""
             output += str(round(speed[0] / 1000, 1)) + "GHz" + separator
 
         if char == "S" and speed is not None:
             if names:
-                output += c_name if c_name else "avSPD: "
+                output += c_name if c_name else ""
             output += str(round(speed[0] / 1000, 1)) + "/" + str(round(speed[2] / 1000, 1)) + "GHz" + separator
 
         if char == "t" and temp is not None and len(temp) > 0:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else ""
             output += str(temp["coretemp"][0][1]).split(".")[0]
             output += "℉" if fahrenheit else "℃"
             output += separator
 
         if char == "f" and fans is not None and len(fans) > 0:
             if names:
-                output += c_name if c_name else " "
+                output += c_name if c_name else " "
             fan0 = next(iter(fans.values()))
             output += str(fan0[0][1]) + "/m" + separator
 
@@ -282,7 +284,7 @@ def main():
             m, s = divmod(up_time, 60)
             h, m = divmod(m, 60)
             if names:
-                output += c_name if c_name else "UP: "
+                output += c_name if c_name else " "
             output += "%d:%02d" % (h, m) + separator
 
         if char == 'U' and b_time is not None:
@@ -290,7 +292,7 @@ def main():
             m, s = divmod(up_time, 60)
             h, m = divmod(m, 60)
             if names:
-                output += c_name if c_name else "UP: "
+                output += c_name if c_name else " "
             output += "%d:%02d:%02d" % (h, m, s) + separator
 
         if char == "w" and swap is not None:
@@ -341,8 +343,8 @@ def main():
 
         if char == "k":
             if names and xfer_start is not None and xfer_finish is not None:
-                output += c_name if c_name else "Net: "
-            output += '{:0.2f}'.format((xfer_finish[0] - xfer_start[0]) / 1024) + '  {:0.2f} kB/s'.format(
+                output += c_name if c_name else glyph
+            output += '{:0.2f}'.format((xfer_finish[0] - xfer_start[0]) / 1024) + '/{:0.2f} kB/s'.format(
                 (xfer_finish[1] - xfer_start[1]) / 1024) + separator
 
     if testing:
@@ -474,6 +476,18 @@ def net_icon(home, ul, dl):
         f_name = "xfer.svg"
 
     return icon_to_use(home, f_name)
+
+
+def net_glyph(home, ul, dl):
+    # ⇑⇓⇕↑↓⇅⥣⥥⥮⬆⬇⬍
+    if ul >= 0.01 and dl >= 0.01:
+        return " "
+    elif ul >= 0.01:
+        return " "
+    elif dl >= 0.01:
+        return " "
+    else:
+        return ""
 
 
 def icon_to_use(home, f_name):
