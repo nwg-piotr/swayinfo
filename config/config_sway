@@ -5,7 +5,7 @@
 # Read `man 5 sway` for a complete reference.
 
 # border & title.. Must be set to border pixel for gaps to work
-for_window [title="^.*"] border normal, title_format "%class >> %title"
+for_window [title="^.*"] border pixel 2, title_format "%class >> %title"
 
 ### Variables
 #
@@ -36,15 +36,15 @@ set $Mon2 HDMI-A-1
 #
 # Autostart
 #
-exec_always --no-startup-id nm-applet
+exec_always nm-applet
 
 # To run java swing(broken) applications (e.g. IntelliJ)
-exec --no-startup-id wmname LG3D
+exec wmname LG3D
 
-exec --no-startup-id light -S 20
-exec --no-startup-id amixer sset 'Master' 40%
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id gnome-keyring-daemon --start --components=pkcs11
+exec light -S 20
+exec amixer sset 'Master' 40%
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec gnome-keyring-daemon --start --components=pkcs11
 
 # Your preferred terminal emulator
 set $term tilix
@@ -61,7 +61,7 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-85117.jpg fill
+output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-125715.jpg fill
 
 #
 # Example configuration:
@@ -126,10 +126,10 @@ input * xkb_layout "pl"
     bindsym $mod+d exec $menu
 
 # launchers
-    bindsym Control+space exec --no-startup-id rofr.sh -r
+    bindsym Control+space exec rofr.sh -r
 
 # this is needed for super key to launch rofi
-    bindsym Mod1+F1 exec --no-startup-id rofr.sh -r
+    bindsym Mod1+F1 exec rofr.sh -r
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -142,25 +142,24 @@ input * xkb_layout "pl"
     bindsym $mod+Shift+c reload
 
 # logout script
-    bindsym $mod+x exec --no-startup-id rofr.sh -l
+    bindsym $mod+x exec rofr.sh -l
 
 # Screenshot
-bindsym Print exec --no-startup-id flameshot screen -p ~/Obrazy
-bindsym Control+Print exec --no-startup-id flameshot gui
-bindsym Shift+Control+Print exec --no-startup-id flameshot full -p ~/Obrazy
+#bindsym Print exec swayshot display !! this is set by default in /etc
+bindsym Control+Print exec swayshot region
 
 # audio
-bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
-bindsym XF86AudioNext exec --no-startup-id playerctl next
-bindsym XF86AudioPrev exec --no-startup-id playerctl previous
-bindsym XF86AudioStop exec --no-startup-id playerctl stop
-bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 2
-bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 2
-bindsym XF86AudioMute exec --no-startup-id pamixer -t
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioStop exec playerctl stop
+bindsym XF86AudioRaiseVolume exec pamixer -i 2
+bindsym XF86AudioLowerVolume exec pamixer -d 2
+bindsym XF86AudioMute exec pamixer -t
 
 # backlight
-bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5
-bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5
+bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec light -U 5
 
 # Borders
     new_window normal
@@ -325,7 +324,7 @@ assign [class="(?i)(?:jetbrains*|codeblocks)"] → $WS8
 for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
 for_window [class="(?i)(?:pavucontrol|terminator|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
 for_window [window_role="(?i)(?:pop-up|setup)"] floating enable, focus
-for_window [title="Google Hangouts*"] floating disable, resize set 560
+for_window [title="Google Hangouts*"] resize set 560
 # for_window [title="jetbrains*"] floating enable, focus, border none
 for_window [class="(?i)(?:codeblocks)"] focus
 for_window [title="Confirm*"] floating enable
@@ -348,24 +347,28 @@ bar {
     colors {
         statusline #ffffff
         background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        inactive_workspace #32323299 #32323299 #5c5c5c
     }
+    font pango:DejaVu Sans Mono 10
+    status_padding 5
+    status_edge_padding 5
 }
 
 bar {
     position bottom
     workspace_buttons no
-    tray_output none
+    #tray_output none
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command while /home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N; do sleep 1; done
+    status_command while /home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N; do sleep 3; done
 
     colors {
         statusline #ffffff
         background #323232
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
+    output eDP-1
 }
 
 include /etc/sway/config.d/*

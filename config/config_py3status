@@ -12,6 +12,7 @@ general {
 }
 
 order += "clock"
+order += "external_script"
 order += "static_string i3lock"
 order += "static_string screenshot"
 order += "online_status"
@@ -21,17 +22,10 @@ order += "volume_status"
 order += "battery_level"
 
 #⌚⌛◷
-#
+#
 #
 
-time {
-	format = "   %A %e %B  %H:%M"
-	on_click 1 = "exec --no-startup-id gahshomar"
-}
-
 battery_level{
-	#blocks = ""
-	#blocks = ""
 	blocks = ""
 	charging_character = ""
 	format = "{icon} {percent}%"
@@ -39,16 +33,18 @@ battery_level{
 	cache_timeout = 5
 	on_click 1 = "exec --no-startup-id b=$(acpi -b) && notify-send \"$b\" --expire-time=3000"
 }
+
 arch_updates {
 	format = "{total}"
 	on_click 1 = "exec --no-startup-id terminator -e \'exec -c trizen -Syu\'"
-#; echo Press enter to exit; read;
 }
+
 backlight {
 	format = " {level}%"
 	command = "light"
 	brightness_delta = 5
 }
+
 volume_status {
 	format = "[\?if=is_input ] {percentage}%"
 	format_muted = "[\?if=is_input | muted]"
@@ -60,6 +56,7 @@ volume_status {
 	command = "pactl"
 	on_click 3 = "exec --no-startup-id pavucontrol"
 }
+
 online_status {
 	cache_timeout = 10
 	format_offline = ""
@@ -68,15 +65,23 @@ online_status {
 	color_on = "#FFFFFF"
 	color_off = "#FF0000"
 }
+
 static_string screenshot {
 	format = ""
-    	# Taking Screenshot using grim
-	on_click 1 = "exec --no-startup-id grim /home/piotr/Obrazy/img-$(date +%Y-%m-%d).png | xargs -I '{}' maim -s '{}' && notify-send 'Screenshot' 'Screenshot taken'"}
+    # Taking Screenshot using grim
+	on_click 1 = "exec --no-startup-id grim /home/piotr/Obrazy/img-$(date +%Y-%m-%d).png | xargs -I '{}' maim -s '{}' && notify-send 'Screenshot' 'Screenshot taken'"
+}
 static_string i3lock {
 	format = ""
-    	# Set background for lock screen using -i argument
 	on_click 1 = "exec --no-startup-id swaylock -f -c 000000"
 }
+
 clock {
 	#format = "{Local}"
+}
+
+external_script {
+    format = "{output}"
+    script_path = "/home/piotr/PycharmProjects/swayinfo/bbswitch"
+    cache_timeout = 1
 }
