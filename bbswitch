@@ -8,7 +8,7 @@
 
 # Credits: https://github.com/dsboger/gnome-shell-extension-bumblebee-status
 
-# Use in py3status as external_script:
+# Use in py3status as external_script module:
 
 # external_script {
 #     format = "{output}"
