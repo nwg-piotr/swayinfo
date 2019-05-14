@@ -7,23 +7,75 @@
 # If the above line is not correctly displayed, fix your editor first!
 
 general {
-        colors = true
-        interval = 5
+    color = '#FFFFFF'
+    color_good = '#FFFFFF'
+    color_bad = '#666666'
+    color_degraded = '#999999'
+    interval = 5
 }
 
 order += "clock"
+order += "mpris"
+order += "volume_status"
+order += "backlight"
+order += "scratchpad_counter"
 order += "external_script"
 order += "static_string i3lock"
-order += "static_string screenshot"
+# order += "static_string screenshot"
 order += "online_status"
 order += "arch_updates"
-order += "backlight"
-order += "volume_status"
 order += "battery_level"
 
 #⌚⌛◷
-#
+#
 #
+
+weather_owm {
+    api_key = 'f060ab40f2b012e72350f6acc413132a'
+    #city = 'Sokołów Podlaski'
+    location = (52.4292424,22.2039288)
+    country = 'Poland'
+    lang = 'pl'
+    unit_rain = 'mm'
+    unit_snow = 'cm'
+    unit_temperature = 'C'
+    unit_wind = 'msec'
+
+    format_sunrise = '{icon} %-H:%M'
+    format_sunset = '{icon} %-H:%M'
+    format_wind = '{icon} {speed:.0f} m/s'
+    format = '{city} {temperature} {icon} {description} {wind} {sunrise} {sunset}'
+    offset_gmt = '+02:00'
+
+    icon_atmosphere = ''
+	icon_cloud  = ''
+	icon_extreme = ''
+	icon_humidity = ''
+	icon_pressure = ''
+	icon_rain = ''
+	icon_snow = ''
+	icon_sun = ''
+	icon_sunrise = ''
+	icon_sunset  = ''
+	icon_temperature = ''
+	icon_thunderstorm = ''
+	icon_wind = ''
+}
+
+scratchpad_counter {
+	format = " {counter}"
+	on_click 1 = "scratchpad show"
+}
+
+mpris {
+    format = "[{artist}: ][{title}] {previous} {toggle} {next}"
+    format_none = "silence"
+    icon_next = ""
+    icon_pause = ""
+    icon_play = ""
+    icon_previous = ""
+    icon_stop = ""
+}
 
 battery_level{
 	blocks = ""
@@ -36,7 +88,7 @@ battery_level{
 
 arch_updates {
 	format = "{total}"
-	on_click 1 = "exec --no-startup-id terminator -e \'exec -c trizen -Syu\'"
+	on_click 1 = "exec terminator -e \'exec -c trizen -Syu\' | killall -USR1 py3status"
 }
 
 backlight {
@@ -60,7 +112,7 @@ volume_status {
 online_status {
 	cache_timeout = 10
 	format_offline = ""
-	format_online = ""
+	format_online = ""
 	timeout = 20
 	color_on = "#FFFFFF"
 	color_off = "#FF0000"

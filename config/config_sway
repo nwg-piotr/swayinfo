@@ -12,26 +12,42 @@ for_window [title="^.*"] border pixel 2, title_format "%class >> %title"
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
 
-# Home row direction keys, like AL
-set $up l
-set $down k
-set $left j
-set $right semicolon
+set $gnome-schema org.gnome.desktop.interface
 
-set $WS1 "1: "
-set $WS2 "2: "
-set $WS3 "3: "
-set $WS4 "4: "
-set $WS5 "5: "
-set $WS6 "6: "
-set $WS7 "7: "
-set $WS8 "8: "
+### Theme settings
+# To check current theme settings: gsettings get org.gnome.desktop.interface gtk-theme
+	exec_always {
+		gsettings set $gnome-schema gtk-theme 'Numix-Frost'
+		gsettings set $gnome-schema icon-theme 'Papirus'
+		gsettings set $gnome-schema cursor-theme 'Adwaita'
+	}
+
+# Home row direction keys
+	set $up l
+	set $down k
+	set $left j
+	set $right semicolon
+
+# Workspace names
+	set $WS1 "1: "
+	set $WS2 "2: "
+	set $WS3 "3: "
+	set $WS4 "4: "
+	set $WS5 "5: "
+	set $WS6 "6: "
+	set $WS7 "7: "
+	set $WS8 "8: "
 
 # monitors
 set $Mon1 eDP-1
 set $Mon2 HDMI-A-1
 
-#font 'pango:Ubuntu Mono 12'
+# gaps
+gaps inner 5
+gaps outer 5
+
+# font
+font pango: DejaVu Sans Mono 10
 
 #
 # Autostart
@@ -43,7 +59,8 @@ exec wmname LG3D
 
 exec light -S 20
 exec amixer sset 'Master' 40%
-exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec lxpolkit
 exec gnome-keyring-daemon --start --components=pkcs11
 
 # Your preferred terminal emulator
@@ -61,12 +78,16 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-125715.jpg fill
+output eDP-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-333521.jpg fill
+output HDMI-A-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-333521.jpg fill
+
+xwayland enable
 
 #
-# Example configuration:
+# Output configuration:
 #
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+   output eDP-1 resolution 1920x1080 position 1920,0
+   output HDMI-A-1 resolution 1920x1080 position 3840,0
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
@@ -100,6 +121,9 @@ exec swayidle -w \
 
 # keyboard layout
 input * xkb_layout "pl"
+
+# numlock on
+input * xkb_numlock enabled
 
 ### Key bindings
 #
@@ -144,10 +168,6 @@ input * xkb_layout "pl"
 # logout script
     bindsym $mod+x exec rofr.sh -l
 
-# Screenshot
-#bindsym Print exec swayshot display !! this is set by default in /etc
-bindsym Control+Print exec swayshot region
-
 # audio
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
@@ -176,6 +196,14 @@ bindsym $mod+u border none
 
     # exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+#
+# Change gaps
+#
+	bindsym $mod+equal gaps inner current plus 5
+	bindsym $mod+minus gaps inner current minus 5
+	bindsym $mod+plus gaps outer current plus 5
+	bindsym $mod+underscore gaps outer current minus 5
+
 #
 # Moving around:
 #
@@ -247,7 +275,9 @@ bindsym $mod+u border none
     # Switch the current container between different layout styles
     bindsym $mod+Shift+t layout tabbed
     bindsym $mod+Shift+s layout stacking
-    bindsym $mod+Tab layout toggle split
+    #bindsym $mod+Tab layout toggle split
+    bindsym mod1+Tab layout toggle tabbed split
+	bindsym $mod+Tab layout toggle splitv splith
 
     # Make the current focus fullscreen
     bindsym $mod+Shift+f fullscreen
@@ -267,11 +297,11 @@ bindsym $mod+u border none
     # You can send windows there and get them back later.
 
     # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+Shift+z move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
+    bindsym $mod+z scratchpad show
 #
 # Resizing containers:
 #
@@ -324,9 +354,10 @@ assign [class="(?i)(?:jetbrains*|codeblocks)"] → $WS8
 for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
 for_window [class="(?i)(?:pavucontrol|terminator|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
 for_window [window_role="(?i)(?:pop-up|setup)"] floating enable, focus
-for_window [title="Google Hangouts*"] resize set 560
+for_window [title="Google Hangouts*"] resize set width 560 px
+for_window [title="squarely*"] resize set height 870 px
 # for_window [title="jetbrains*"] floating enable, focus, border none
-for_window [class="(?i)(?:codeblocks)"] focus
+for_window [class="(?i)(?:codeblocks|tilix)"] focus
 for_window [title="Confirm*"] floating enable
 for_window [title="Chromium*"] border none
 for_window [title="xfce4-*"] border none
@@ -346,18 +377,20 @@ bar {
 
     colors {
         statusline #ffffff
-        background #323232
-        inactive_workspace #32323299 #32323299 #5c5c5c
+        background #202020
+        inactive_workspace #32323299 #32323299 #6c6c6c
     }
-    font pango:DejaVu Sans Mono 10
+    font pango:Ubontu Mono Nerd 11
     status_padding 5
     status_edge_padding 5
+    output eDP-1
+    #tray_output eDP-1
 }
 
 bar {
     position bottom
     workspace_buttons no
-    #tray_output none
+    tray_output none
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
@@ -365,10 +398,31 @@ bar {
 
     colors {
         statusline #ffffff
-        background #323232
+        background #0F0F0F
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
+    #output HDMI-A-1
     output eDP-1
 }
 
-include /etc/sway/config.d/*
+bar {
+    position top
+	tray_output none
+    colors {
+        statusline #ffffff
+        background #202020
+        inactive_workspace #32323200 #32323200 #5c5c5c
+    }
+    output HDMI-A-1
+    # status_command while t2ec --weather -N; do sleep 900; done
+    status_command py3status -c /home/piotr/.config/py3status/config_secondary_top
+}
+
+# /etc/sway/config.d/swayshot file uses `Mod1` variable instead of `mod1`
+# Let's comment it out and substitute below
+
+# include /etc/sway/config.d/*
+
+bindsym Print exec swayshot
+bindsym Control+Print exec swayshot window
+bindsym Shift+Control+Print exec swayshot region
