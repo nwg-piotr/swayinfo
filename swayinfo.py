@@ -481,11 +481,11 @@ def net_icon(home, ul, dl):
 def net_glyph(home, ul, dl):
     # ⇑⇓⇕↑↓⇅⥣⥥⥮⬆⬇⬍
     if ul >= 0.01 and dl >= 0.01:
-        return " "
+        return " "
     elif ul >= 0.01:
-        return " "
+        return " "
     elif dl >= 0.01:
-        return " "
+        return " "
     else:
         return ""
 
