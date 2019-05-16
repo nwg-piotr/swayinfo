@@ -36,12 +36,13 @@ import time
 
 
 def main():
-    t2ec_dir = os.getenv("HOME") + "/.t2ecol"
+    config_dir = os.getenv("HOME") + "/.config/swinfo"
+    if not os.path.isdir(config_dir):
+        os.mkdir(config_dir)
     response = None
     name = None
-    img_path = "/usr/share/t2ec/"
 
-    settings = Settings()
+    settings = Settings(config_dir)
 
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
@@ -74,18 +75,9 @@ def main():
             if sys.argv[i].startswith("-D"):
                 c_id = sys.argv[i][2::]
                 if c_id:
-                    show_details(t2ec_dir, c_id)
+                    show_details(config_dir, c_id)
                 else:
-                    show_details(t2ec_dir, settings.city_id)
-
-    if settings.img_path is not None:
-        img_path = settings.img_path
-
-    #if name is not None:
-    #    os.system("echo Checking...")
-    #else:
-    #    os.system("echo /usr/share/t2ec/refresh.svg")
-    #    os.system("echo ''")
+                    show_details(config_dir, settings.city_id)
 
     request_url = "http://api.openweathermap.org/data/2.5/weather?id=" + settings.city_id + "&appid=" + \
                   settings.api_key + "&units=" + settings.units + "&lang=" + settings.lang
@@ -102,6 +94,7 @@ def main():
         # Convert JSON to object - after DS. at https://stackoverflow.com/a/15882054/4040598
         owm = json.loads(response, object_hook=lambda d: namedtuple('t', d.keys(), rename=True)(*d.values()))
 
+        # Icon definitions. You may also use just characters here, like '' instead of '\uf00d'
         icons = {'01d': '\uf00d',
                  '01n': '\uf02e',
                  '02d': '\uf002',
@@ -121,9 +114,16 @@ def main():
                  '50d': '\uf014',
                  '50n': '\uf014'}
 
+        icon_sunrise = '\uf046'
+        icon_sunset = '\uf047'
+        icon_temperature = '\uf053'
+        icon_humidity = '\uf078'
+        icon_pressure = '\uf079'
+        icon_wind = '\uf050'
+
         if owm.cod == 200:
             # Prepare panel items
-            icon = "/usr/share/t2ec/refresh.svg"
+            icon = '\uea61'
             try:
                 icon = icons[str(getattr(owm.weather[0], "icon"))]
             except KeyError:
@@ -193,10 +193,6 @@ def main():
                 pass
 
             output = icon
-            #if name is None:
-            #    os.system("echo " + icon)
-            #else:
-            #    output += name
 
             for i in range(len(settings.items)):
                 if settings.items[i] == "c" and city is not None:
@@ -206,15 +202,15 @@ def main():
                 if settings.items[i] == "d" and desc is not None:
                     output += " " + desc + " "
                 if settings.items[i] == "t" and temp is not None:
-                    output += " " + temp + " "
+                    output += icon_temperature + " " + temp + " "
                 if settings.items[i] == "p" and pressure is not None:
-                    output += " " + pressure + " "
+                    output += icon_pressure + " " + pressure + " "
                 if settings.items[i] == "h" and humidity is not None:
-                    output += " " + humidity + " "
+                    output += icon_humidity + " " + humidity + " "
                 if settings.items[i] == "w" and wind is not None:
-                    output += " " + wind + " "
+                    output += icon_wind + " " + wind + " "
                 if settings.items[i] == "S" and sunrise is not None and sunset is not None:
-                    output += " " + settings.dict["_sunrise"] + sunrise + " " + settings.dict["_sunset"] + sunset + " "
+                    output += icon_sunrise + " " + sunrise + " " + icon_sunset + " " + sunset + " "
 
             print(re.sub(' +', ' ', output).strip())
 
@@ -239,7 +235,7 @@ def main():
             if sunset is not None:
                 details += settings.dict["_sunset"] + ": " + sunset + "\n"
 
-            subprocess.call(["echo '" + str(details) + "' > " + t2ec_dir + "/.weather-" + settings.city_id], shell=True)
+            subprocess.call(["echo '" + str(details) + "' > " + config_dir + "/.weather-" + settings.city_id], shell=True)
 
         else:
             if name is None:
@@ -280,31 +276,27 @@ def print_help():
 
 
 class Settings:
-    def __init__(self):
+    def __init__(self, config_dir):
         super().__init__()
 
-        t2ec_dir = os.getenv("HOME") + "/.t2ecol"
-
         # Create settings file if not found
-        if not os.path.isdir(t2ec_dir):
-            os.makedirs(t2ec_dir)
-        if not os.path.isfile(t2ec_dir + "/weatherrc"):
+        if not os.path.isdir(config_dir):
+            os.makedirs(config_dir)
+        if not os.path.isfile(config_dir + "/weatherrc"):
             config = [
-                "# Items: [s]hort description, [d]escription, [t]emperature, [p]ressure, [h]umidity, [w]ind, [c]ity name\n",
+                "# Items: [s]hort description, [d]escription, [t]emperature, [p]ressure, [h]umidity, [w]ind, [c]ity name, [S]unrise & sunset\n",
                 "# API key: go to http://openweathermap.org and get one\n",
                 "# city_id you will find at http://openweathermap.org/find\n",
                 "# units may be metric or imperial\n",
                 "# Uncomment lang to override system $LANG value\n",
-                "# Uncomment img_path to override built-in icons\n",
                 "# \n",
                 "# Delete this file if something goes wrong :)\n",
-                "# ------------------------------------------------\n",
+                "# \n",
                 "items = ct\n",
                 "api_key = your_key_here\n",
                 "city_id = 2643743\n",
                 "units = metric\n",
                 "#lang = en\n",
-                "#img_path = /home/user/my_custom_icons/\n",
                 "\n",
                 "# You may translate your output below:\n",
                 "#\n",
@@ -314,9 +306,9 @@ class Settings:
                 "_pressure = Pressure\n",
                 "_humidity = Humidity\n",
                 "_sunrise = Sunrise\n",
-                "_sunset = Sunset\n"]
+                "_sunset = Sunset"]
 
-            subprocess.call(["echo '" + ''.join(config) + "' > " + t2ec_dir + "/weatherrc"], shell=True)
+            subprocess.call(["echo '" + ''.join(config) + "' > " + config_dir + "/weatherrc"], shell=True)
 
         # Set default values
         self.items = "ct"
@@ -334,7 +326,7 @@ class Settings:
                      '_sunset': 'Sunset'}
 
         # Override defaults with config file values, if found
-        lines = open(t2ec_dir + "/weatherrc", 'r').read().rstrip().splitlines()
+        lines = open(config_dir + "/weatherrc", 'r').read().rstrip().splitlines()
 
         for line in lines:
             if not line.startswith("#"):
