@@ -48,7 +48,7 @@ def main():
 
 def upower():
     """
-    parse `upower -d` command output (upower package required)
+    parse `upower -d` command output
     :return: dictionary
     """
     percentage = None
