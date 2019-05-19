@@ -20,7 +20,8 @@ import subprocess
 def main():
 
     low = 20
-    full = 100
+    full = 97
+    charging = False
 
     # You may override levels given above with arguments: [low <value>] [full <value>]
     for i in range(len(sys.argv)):
@@ -39,14 +40,15 @@ def main():
 
     status = upower()
 
-    if status["percentage"] is not None and status["percentage"] <= low:
+    if status["percentage"] is not None and status["percentage"] <= low and not status["charging"]:
         notify("Battery low: " + str(status["percentage"]) + "%", status["icon_name"])
-    elif status["percentage"] is not None and status["percentage"] >= full:
+    elif status["percentage"] is not None and status["percentage"] >= full and status["charging"]:
         notify("Battery full: " + str(status["percentage"]) + "%", status["icon_name"])
 
 
 def upower():
     percentage = None
+    charging = False
     icon_name = ''
 
     upower_output = subprocess.check_output("upower -d", shell=True).decode("utf-8").splitlines()
@@ -57,11 +59,16 @@ def upower():
                 percentage = int(line.split()[1][:-1])
             except ValueError:
                 pass
+
+        if line.startswith('state:'):
+            charging = line.split()[1] == 'charging'
+
         if line.startswith('icon-name:'):
             icon_name = line.split()[1][1:-1]  # strip quotes
 
     return {
         "percentage": percentage,
+        "charging": charging,
         "icon_name": icon_name
     }
 
