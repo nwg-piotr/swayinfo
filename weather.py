@@ -20,8 +20,6 @@ Arguments to override some ~/t2ecol/weatherrc config file values:
 items: [s]hort description, [d]escription, [t]emperature, [p]ressure, [h]umidity, [w]ind, [c]ity ID
 -D[<city_id>] shows details as a notification.
 
-*** THIS SCRIPT IS NOT YET READY! ***
-
 Dependencies: wget
 """
 
@@ -85,8 +83,6 @@ def main():
         response = subprocess.check_output("wget -o /dev/null -qO- '" + request_url + "'", shell=True)
 
     except subprocess.CalledProcessError as exitcode:
-        #if name is None:
-        #    os.system("echo /usr/share/t2ec/refresh.svg")
         os.system("echo Exit code: " + str(exitcode.returncode))
         exit(0)
 
