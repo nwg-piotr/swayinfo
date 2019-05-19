@@ -21,7 +21,6 @@ def main():
 
     low = 20
     full = 97
-    charging = False
 
     # You may override levels given above with arguments: [low <value>] [full <value>]
     for i in range(len(sys.argv)):
@@ -42,11 +41,16 @@ def main():
 
     if status["percentage"] is not None and status["percentage"] <= low and not status["charging"]:
         notify("Battery low: " + str(status["percentage"]) + "%", status["icon_name"])
+
     elif status["percentage"] is not None and status["percentage"] >= full and status["charging"]:
         notify("Battery full: " + str(status["percentage"]) + "%", status["icon_name"])
 
 
 def upower():
+    """
+    parse `upower -d` command output (upower package required)
+    :return: dictionary
+    """
     percentage = None
     charging = False
     icon_name = ''
