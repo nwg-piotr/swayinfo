@@ -65,7 +65,7 @@ def upower():
                 pass
 
         if line.startswith('state:'):
-            charging = line.split()[1] == 'charging'
+            charging = line.split()[1] != 'discharging'
 
         if line.startswith('icon-name:'):
             icon_name = line.split()[1][1:-1]  # strip quotes
