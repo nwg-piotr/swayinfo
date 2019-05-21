@@ -14,52 +14,28 @@ general {
     interval = 5
 }
 
+order += "window_title_async"
 order += "clock"
 order += "mpris"
 order += "volume_status"
 order += "backlight"
 order += "scratchpad_counter"
-order += "external_script"
+order += "external_script bbswitch"
 order += "static_string i3lock"
 # order += "static_string screenshot"
 order += "online_status"
 order += "arch_updates"
 order += "battery_level"
+order += "external_script battery_warning"
 
-#⌚⌛◷
+#⌚⌛◷
 #
 #
 
-weather_owm {
-    api_key = 'f060ab40f2b012e72350f6acc413132a'
-    #city = 'Sokołów Podlaski'
-    location = (52.4292424,22.2039288)
-    country = 'Poland'
-    lang = 'pl'
-    unit_rain = 'mm'
-    unit_snow = 'cm'
-    unit_temperature = 'C'
-    unit_wind = 'msec'
-
-    format_sunrise = '{icon} %-H:%M'
-    format_sunset = '{icon} %-H:%M'
-    format_wind = '{icon} {speed:.0f} m/s'
-    format = '{city} {temperature} {icon} {description} {wind} {sunrise} {sunset}'
-    offset_gmt = '+02:00'
-
-    icon_atmosphere = ''
-	icon_cloud  = ''
-	icon_extreme = ''
-	icon_humidity = ''
-	icon_pressure = ''
-	icon_rain = ''
-	icon_snow = ''
-	icon_sun = ''
-	icon_sunrise = ''
-	icon_sunset  = ''
-	icon_temperature = ''
-	icon_thunderstorm = ''
-	icon_wind = ''
+window_title_async {
+	format = "\[ {title} \]"
+	color = "#00FFFF"
+	max_width = 40
 }
 
 scratchpad_counter {
@@ -82,13 +58,20 @@ battery_level{
 	charging_character = ""
 	format = "{icon} {percent}%"
 	color_charging = "#FFFFFF"
-	cache_timeout = 5
-	on_click 1 = "exec --no-startup-id b=$(acpi -b) && notify-send \"$b\" --expire-time=3000"
+	color_bad = "#FF0000"
+	color_degraded = "#FFFF00"
+	cache_timeout = 60
+	threshold_full = 99
+	notification = True
+	notify_low_level = True
+	hide_seconds = True
+	measurement_mode = "sys"
+	on_click 1 = "exec b=$(acpi -b) && notify-send \"$b\" --expire-time=3000"
 }
 
 arch_updates {
 	format = "{total}"
-	on_click 1 = "exec terminator -e \'exec -c trizen -Syu\' | killall -USR1 py3status"
+	on_click 1 = "exec tilix -t Arch -e \'trizen -Syu\' && killall -USR1 py3status"
 }
 
 backlight {
@@ -106,7 +89,7 @@ volume_status {
     	]
 	color_muted = "#CCCCCC"
 	command = "pactl"
-	on_click 3 = "exec --no-startup-id pavucontrol"
+	on_click 3 = "exec pavucontrol"
 }
 
 online_status {
@@ -121,19 +104,25 @@ online_status {
 static_string screenshot {
 	format = ""
     # Taking Screenshot using grim
-	on_click 1 = "exec --no-startup-id grim /home/piotr/Obrazy/img-$(date +%Y-%m-%d).png | xargs -I '{}' maim -s '{}' && notify-send 'Screenshot' 'Screenshot taken'"
+	on_click 1 = "exec grim /home/piotr/Obrazy/img-$(date +%Y-%m-%d).png | xargs -I '{}' maim -s '{}' && notify-send 'Screenshot' 'Screenshot taken'"
 }
 static_string i3lock {
 	format = ""
-	on_click 1 = "exec --no-startup-id swaylock -f -c 000000"
+	on_click 1 = "exec swaylock -f -c 000000"
 }
 
 clock {
 	#format = "{Local}"
 }
 
-external_script {
+external_script bbswitch {
     format = "{output}"
     script_path = "/home/piotr/PycharmProjects/swayinfo/bbswitch"
     cache_timeout = 1
+}
+
+external_script battery_warning {
+    format = "{output}"
+    script_path = "/home/piotr/PycharmProjects/swayinfo/battery_warning.py"
+    cache_timeout = 60
 }

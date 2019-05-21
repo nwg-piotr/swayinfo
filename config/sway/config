@@ -4,6 +4,8 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+exec xrdb -load ~/.Xresources
+
 # border & title.. Must be set to border pixel for gaps to work
 for_window [title="^.*"] border pixel 2, title_format "%class >> %title"
 
@@ -36,7 +38,7 @@ set $gnome-schema org.gnome.desktop.interface
 	set $WS5 "5: "
 	set $WS6 "6: "
 	set $WS7 "7: "
-	set $WS8 "8: "
+	set $WS8 "8: "
 
 # monitors
 set $Mon1 eDP-1
@@ -61,7 +63,7 @@ exec light -S 20
 exec amixer sset 'Master' 40%
 #exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec lxpolkit
-exec gnome-keyring-daemon --start --components=pkcs11
+exec gnome-keyring-daemon --start -bindsym-components=pkcs11
 
 # Your preferred terminal emulator
 set $term tilix
@@ -78,8 +80,8 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output eDP-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-333521.jpg fill
-output HDMI-A-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-333521.jpg fill
+output eDP-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390.jpg fill
+output HDMI-A-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390-mirror.jpg fill
 
 xwayland enable
 
@@ -352,13 +354,14 @@ assign [class="(?i)(?:jetbrains*|codeblocks)"] → $WS8
 
 # focus, floating, & sticky
 for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
-for_window [class="(?i)(?:pavucontrol|terminator|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
-for_window [window_role="(?i)(?:pop-up|setup)"] floating enable, focus
+for_window [class="(?i)(?:pavucontrol|termite|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
+for_window [window_role="(?i)(?:pop-up|setup|Arch)"] floating enable, focus
 for_window [title="Google Hangouts*"] resize set width 560 px
 for_window [title="squarely*"] resize set height 870 px
 # for_window [title="jetbrains*"] floating enable, focus, border none
 for_window [class="(?i)(?:codeblocks|tilix)"] focus
 for_window [title="Confirm*"] floating enable
+for_window [title="galculator*"] floating enable
 for_window [title="Chromium*"] border none
 for_window [title="xfce4-*"] border none
 
@@ -380,7 +383,7 @@ bar {
         background #202020
         inactive_workspace #32323299 #32323299 #6c6c6c
     }
-    font pango:Ubontu Mono Nerd 11
+    font pango:Ubuntu Mono Nerd 11
     status_padding 5
     status_edge_padding 5
     output eDP-1
@@ -414,8 +417,8 @@ bar {
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
     output HDMI-A-1
-    # status_command while t2ec --weather -N; do sleep 900; done
-    status_command py3status -c /home/piotr/.config/py3status/config_secondary_top
+	font 'Weather Icons 11'
+	status_command while /home/piotr/PycharmProjects/swayinfo/weather.py -IcdtphwS; do sleep 1800; done
 }
 
 # /etc/sway/config.d/swayshot file uses `Mod1` variable instead of `mod1`
