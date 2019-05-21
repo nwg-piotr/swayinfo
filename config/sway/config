@@ -358,12 +358,12 @@ for_window [class="(?i)(?:pavucontrol|termite|game.py|galculator|baobab|gnome-di
 for_window [window_role="(?i)(?:pop-up|setup|Arch)"] floating enable, focus
 for_window [title="Google Hangouts*"] resize set width 560 px
 for_window [title="squarely*"] resize set height 870 px
-# for_window [title="jetbrains*"] floating enable, focus, border none
-for_window [class="(?i)(?:codeblocks|tilix)"] focus
-for_window [title="Confirm*"] floating enable
+for_window [class="(?i)(?:codeblocks|tilix|jetbrains*)"] focus
+for_window [title="Confirm*|Preferencje*|Sterowanie g*"] floating enable
 for_window [title="galculator*"] floating enable
 for_window [title="Chromium*"] border none
 for_window [title="xfce4-*"] border none
+for_window [title="Tilix*"] focus
 
 #
 # Status Bar:
