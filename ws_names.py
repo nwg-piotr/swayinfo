@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# _*_ coding: utf-8 _*_
 
 import i3ipc
 
@@ -33,7 +34,7 @@ for container in i3.get_tree().find_fullscreen():
 root = i3.get_tree()
 print(root.name)
 for con in root:
-    print(con.name)
+    print("***", con.name)
 
 
 # Define a callback to be called when you switch workspaces.
