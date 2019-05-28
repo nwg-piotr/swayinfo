@@ -19,7 +19,7 @@ i3 = i3ipc.Connection()
 # A glyph will substitute the WS name if no window active, otherwise it'll be prepended to the window name
 # Add more if you use more than 8 workspaces
 def glyph(ws_number):
-    glyphs = ["", "", "", "", "", "", "", ""]
+    glyphs = ["", "", "", "", "", "", "", ""]
     # Or you may use words instead of glyphs:
     # glyphs = ["HOME", "WWW", "FILE", "GAME", "TERM", "PIC", "TXT", "CODE"]
     try:
