@@ -1,6 +1,6 @@
-# Default config for sway
+# Customized config for sway
 #
-# Copy this to ~/.config/sway/config and edit it to your liking.
+# Most of bindings come from the ArchLabs i3 config file
 #
 # Read `man 5 sway` for a complete reference.
 
@@ -30,16 +30,6 @@ set $gnome-schema org.gnome.desktop.interface
 	set $left j
 	set $right semicolon
 
-# Workspace names
-	set $WS1 "1: "
-	set $WS2 "2: "
-	set $WS3 "3: "
-	set $WS4 "4: "
-	set $WS5 "5: "
-	set $WS6 "6: "
-	set $WS7 "7: "
-	set $WS8 "8: "
-
 # monitors
 set $Mon1 eDP-1
 set $Mon2 HDMI-A-1
@@ -49,12 +39,13 @@ gaps inner 5
 gaps outer 5
 
 # font
-font pango: DejaVu Sans Mono 10
+font pango:DejaVu Sans Mono 10
 
 #
 # Autostart
 #
 exec_always nm-applet
+exec /home/piotr/PycharmProjects/swayinfo/wsdnames.py
 
 # To run java swing(broken) applications (e.g. IntelliJ)
 exec wmname LG3D
@@ -98,8 +89,8 @@ xwayland enable
 # Example configuration:
 #
 exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
-         timeout 600 'swaymsg "output * dpms off"' \
+         timeout 600 'swaylock -f -c 000000' \
+         timeout 900 'swaymsg "output * dpms off"' \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 #
@@ -189,9 +180,9 @@ bindsym XF86MonBrightnessDown exec light -U 5
     hide_edge_borders both
     popup_during_fullscreen smart
 
-# changing border style
-bindsym $mod+n border normal
-bindsym $mod+u border none
+	# changing border style
+	bindsym $mod+n border normal
+	bindsym $mod+u border none
 
     bindsym $mod+Shift+b border toggle
     bindsym mod1+Shift+f fullscreen toggle
@@ -234,34 +225,34 @@ bindsym $mod+u border none
 # Workspaces:
 #
     # workspace assignment
-    workspace $WS1 output $Mon1
-    workspace $WS2 output $Mon1
-    workspace $WS3 output $Mon1
-    workspace $WS4 output $Mon1
-    workspace $WS5 output $Mon2
-    workspace $WS6 output $Mon2
-    workspace $WS7 output $Mon2
-    workspace $WS8 output $Mon2
+    workspace 1 output $Mon1
+    workspace 2 output $Mon1
+    workspace 3 output $Mon1
+    workspace 4 output $Mon1
+    workspace 5 output $Mon2
+    workspace 6 output $Mon2
+    workspace 7 output $Mon2
+    workspace 8 output $Mon2
 
-    # switch to workspace
-    bindsym $mod+1 workspace $WS1
-    bindsym $mod+2 workspace $WS2
-    bindsym $mod+3 workspace $WS3
-    bindsym $mod+4 workspace $WS4
-    bindsym $mod+5 workspace $WS5
-    bindsym $mod+6 workspace $WS6
-    bindsym $mod+7 workspace $WS7
-    bindsym $mod+8 workspace $WS8
+	# switch to workspace
+	bindsym $mod+1 workspace number 1
+	bindsym $mod+2 workspace number 2
+	bindsym $mod+3 workspace number 3
+	bindsym $mod+4 workspace number 4
+	bindsym $mod+5 workspace number 5
+	bindsym $mod+6 workspace number 6
+	bindsym $mod+7 workspace number 7
+	bindsym $mod+8 workspace number 8
 
-    # move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace $WS1; workspace $WS1
-    bindsym $mod+Shift+2 move container to workspace $WS2; workspace $WS2
-    bindsym $mod+Shift+3 move container to workspace $WS3; workspace $WS3
-    bindsym $mod+Shift+4 move container to workspace $WS4; workspace $WS4
-    bindsym $mod+Shift+5 move container to workspace $WS5; workspace $WS5
-    bindsym $mod+Shift+6 move container to workspace $WS6; workspace $WS6
-    bindsym $mod+Shift+7 move container to workspace $WS7; workspace $WS7
-    bindsym $mod+Shift+8 move container to workspace $WS8; workspace $WS8
+	# move focused container to workspace
+	bindsym $mod+Shift+1 move container to workspace number 1; workspace number 1
+	bindsym $mod+Shift+2 move container to workspace number 2; workspace number 2
+	bindsym $mod+Shift+3 move container to workspace number 3; workspace number 3
+	bindsym $mod+Shift+4 move container to workspace number 4; workspace number 4
+	bindsym $mod+Shift+5 move container to workspace number 5; workspace number 5
+	bindsym $mod+Shift+6 move container to workspace number 6; workspace number 6
+	bindsym $mod+Shift+7 move container to workspace number 7; workspace number 7
+	bindsym $mod+Shift+8 move container to workspace number 8; workspace number 8
 
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
@@ -339,18 +330,18 @@ for_window [class="(?i)(?:mousepad|Chromium|tint2conf)"] focus
 
 # Assign Applications to specific workspace
 # get class with xprop
-assign [class="(?i)(?:tint2conf)|pamac-manager"] → $WS1
-assign [class="(?i)(?:tilix)"] → $WS5
-assign [class="(?i)(?:mousepad)"] → $WS5
-assign [class="(?i)(?:Chromium|qutebrowser)"] → $WS2
-assign [class="(?i)(?:thunar)"] → $WS4
-assign [class="(?i)(?:Steam)"] → $WS4
-assign [class="(?i)(?:gimp-*)"] → $WS6
-assign [class="(?i)(?:inkscape)"] → $WS6
-assign [class="(?i)(?:game.py)"] → $WS4
-assign [title="squarely"] → $WS2
-assign [title="Tilix*"] → $WS5
-assign [class="(?i)(?:jetbrains*|codeblocks)"] → $WS8
+assign [class="(?i)(?:tint2conf)|pamac-manager"] → workspace number 1
+assign [class="(?i)(?:tilix)"] → workspace number 5
+assign [class="(?i)(?:mousepad)"] → workspace number 5
+assign [class="(?i)(?:Chromium|qutebrowser)"] → workspace number 2
+assign [class="(?i)(?:thunar)"] → workspace number 4
+assign [class="(?i)(?:Steam)"] → workspace number 4
+assign [class="(?i)(?:gimp-*)"] → workspace number 6
+assign [class="(?i)(?:inkscape)"] → workspace number 6
+assign [class="(?i)(?:game.py)"] → workspace number 4
+assign [title="squarely"] → workspace number 2
+assign [title="Tilix*"] → workspace number 5
+assign [class="(?i)(?:jetbrains*|codeblocks)"] → workspace number 8
 
 # focus, floating, & sticky
 for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
@@ -359,56 +350,58 @@ for_window [window_role="(?i)(?:pop-up|setup|Arch)"] floating enable, focus
 for_window [title="Google Hangouts*"] resize set width 560 px
 for_window [title="squarely*"] resize set height 870 px
 for_window [class="(?i)(?:codeblocks|tilix|jetbrains*)"] focus
-for_window [title="Confirm*|Preferencje*|Sterowanie g*"] floating enable
+for_window [title="Confirm*|Preferencje*|Sterowanie g*|Calendar*"] floating enable
 for_window [title="galculator*"] floating enable
 for_window [title="Chromium*"] border none
 for_window [title="xfce4-*"] border none
 for_window [title="Tilix*"] focus
 
 #
-# Status Bar:
+# Status Bar(s):
 #
 # Read `man 5 sway-bar` for more information about this section.
 bar {
+    # PRIMARY TOP
     position top
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     # status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
-    # status_command while /home/piotr/PycharmProjects/swayinfo/tc.py -CgaMtfD -N; do sleep 1; done
-    status_command py3status
 
     colors {
         statusline #ffffff
         background #202020
         inactive_workspace #32323299 #32323299 #6c6c6c
     }
-    font pango:Ubuntu Mono Nerd 11
-    status_padding 5
+    font pango:Weather Icons 11
+    #status_padding 5
     status_edge_padding 5
     output eDP-1
-    #tray_output eDP-1
+	tray_output eDP-1
+	icon_theme Papirus
+	status_command py3status
 }
 
 bar {
+	# PRIMARY BOTTOM
     position bottom
     workspace_buttons no
     tray_output none
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    status_command while /home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N; do sleep 3; done
-
     colors {
         statusline #ffffff
         background #0F0F0F
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
-    #output HDMI-A-1
+    #font pango:Weather Icons 10
+    status_padding 5
+    status_edge_padding 15
     output eDP-1
+
+    status_command py3status -c /home/piotr/.config/py3status/config_primary_bottom
 }
 
 bar {
+    # SECONDARY TOP
     position top
 	tray_output none
     colors {
@@ -416,9 +409,11 @@ bar {
         background #202020
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
+    font pango:Ubuntu Mono Nerd 10
     output HDMI-A-1
-	font 'Weather Icons 11'
-	status_command while /home/piotr/PycharmProjects/swayinfo/weather.py -IcdtphwS; do sleep 1800; done
+
+	#status_command while /home/piotr/PycharmProjects/swayinfo/weather.py -IcdtphwS; do sleep 1800; done
+	#status_command py3status -c /home/piotr/.config/py3status/config_secondary_top
 }
 
 # /etc/sway/config.d/swayshot file uses `Mod1` variable instead of `mod1`
