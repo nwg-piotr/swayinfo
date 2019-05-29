@@ -33,18 +33,19 @@ def glyph(ws_number):
 # Give the workspace a generic name
 def on_workspace_focus(self, e):
     con = i3.get_tree().find_focused()
-    ws_name = "%s: %s" % (con.workspace().num, glyph(con.workspace().num))
+    ws_name = "{}: {}".format(con.workspace().num, glyph(con.workspace().num))
     i3.command('rename workspace to "%s"' % ws_name)
 
 
 # Name the workspace after the focused window name
 def on_window_focus(i3, e):
     con = i3.get_tree().find_focused()
-    ws_name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), con.name)
+    ws_name = "{}: {}\u00a0{}".format(con.workspace().num, glyph(con.workspace().num), con.name)
     name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
     i3.command('rename workspace to "%s"' % name)
 
 
+# (Pre)name the workspace after the container name (if any)
 def on_window_new(i3, e):
     w_name = e.container.name if e.container.name else ''
     con = i3.get_tree().find_by_id(e.container.id)
