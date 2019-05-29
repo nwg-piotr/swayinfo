@@ -30,55 +30,35 @@ def glyph(ws_number):
         return "?"
 
 
-# Define a callback to be called when you switch workspaces.
+# Give the workspace a generic name
 def on_workspace_focus(self, e):
-    focused = i3.get_tree().find_focused()
-    ws_name = "%s: %s" % (focused.workspace().num, glyph(focused.workspace().num))
+    con = i3.get_tree().find_focused()
+    ws_name = "%s: %s" % (con.workspace().num, glyph(con.workspace().num))
     i3.command('rename workspace to "%s"' % ws_name)
 
 
-# Dynamically name your workspaces after the current window name
+# Name the workspace after the focused window name
 def on_window_focus(i3, e):
-    focused = i3.get_tree().find_focused()
-    ws_num = focused.workspace().num
-    ws_name = "%s: %s\u00a0%s" % (ws_num, glyph(ws_num), focused.name)
+    con = i3.get_tree().find_focused()
+    ws_name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), con.name)
     name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
     i3.command('rename workspace to "%s"' % name)
 
 
 def on_window_new(i3, e):
-    if e.container.window_class:
-        w_name = e.container.window_class
-    elif e.container.window_instance:
-        w_name = e.container.window_instance
-    elif e.container.window_role:
-        w_name = e.container.window_role
-    else:
-        w_name = None
-
-    # search and give name by window name
-    if w_name:
-        for workspace in i3.get_workspaces():
-            if not workspace.visible and not workspace.focused and w_name in workspace.representation:
-                ws_name = "{}: {}\u00a0{}".format(workspace.num, glyph(workspace.num), w_name)
-                i3.command('rename workspace {} to {}'.format(workspace.num, ws_name))
-    # search by window id
-    else:
-        if e.container.id:
-            for workspace in i3.get_workspaces():
-                if not workspace.visible and not workspace.focused and e.container.id == workspace.focus[0]:
-                    ws_name = "{}: {}".format(workspace.num, glyph(workspace.num))
-                    i3.command('rename workspace {} to {}'.format(workspace.num, ws_name))
+    w_name = e.container.name if e.container.name else ''
+    con = i3.get_tree().find_by_id(e.container.id)
+    name = "{}: {}\u00a0{}".format(con.workspace().num, glyph(con.workspace().num), w_name)
+    i3.command('rename workspace {} to {}'.format(con.workspace().num, name))
 
 
 # Subscribe to events
 i3.on('workspace::focus', on_workspace_focus)
-i3.on('window::new', on_window_focus)
 i3.on("window::focus", on_window_focus)
 i3.on("window::title", on_window_focus)
 i3.on("window::focus", on_window_focus)
-i3.on("window::new", on_window_new)
 i3.on("window::close", on_workspace_focus)
+i3.on("window::new", on_window_new)  # [sway] if window opened in another WS and not focused
 
 # Start the main loop and wait for events to come in
 i3.main()
