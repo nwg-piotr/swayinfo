@@ -2,10 +2,13 @@
 # _*_ coding: utf-8 _*_
 
 """
-EARLY DEVELOPMENT VERSION, DON'T USE!
+Dynamic workspace names for Sway
 
-Dynamic workspace names
-Based on the example code at https://pypi.org/project/i3ipc
+Author: Piotr Miller
+e-mail: nwg.piotr@gmail.com
+Project: https://github.com/nwg-piotr/swayinfo
+License: GPL3
+
 Depends on: i3ipc-python
 """
 
@@ -30,41 +33,34 @@ def glyph(ws_number):
         return "?"
 
 
-# Give the workspace a generic name
+# Give the workspace a generic name: "number: glyph" (like "1: ")
 def on_workspace_focus(self, e):
-    print(">>> on_workspace_focus")
     con = i3.get_tree().find_focused()
     ws_num = con.workspace().num
-    ws_old_name = con.workspace().name
     ws_new_name = "%s: %s" % (ws_num, glyph(ws_num))
-    cmd = 'rename workspace {} to "{}"'.format(ws_old_name, ws_new_name)
-    print(cmd)
-    i3.command(cmd)
+
+    i3.command('rename workspace to "{}"'.format(ws_new_name))
 
 
 # Name the workspace after the focused window name
 def on_window_focus(i3, e):
-    print(">>> on_window_focus")
     con = i3.get_tree().find_focused()
     ws_old_name = con.workspace().name
     ws_name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), con.name)
     name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
-    cmd = 'rename workspace "%s" to %s' % (ws_old_name, name)
-    print(cmd)
-    i3.command(cmd)
+
+    i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
 
 
-# (Pre)name the workspace after the container name (if any)
+# In sway it's possible to open a new window w/o moving focus; let's give the workspace a name anyway.
 def on_window_new(i3, e):
-    print(">>> on_window_new")
-    w_name = e.container.name if e.container.name else ''
-    print("W_name = ", w_name)
     con = i3.get_tree().find_by_id(e.container.id)
-    if not w_name:
-        print("con", con.name)
-        w_name = con.name if con.name else ''
-    name = "{}: {}\u00a0{}".format(con.workspace().num, glyph(con.workspace().num), w_name)
-    i3.command('rename workspace to {}'.format(name))
+    ws_num = con.workspace().num
+    w_name = con.name if con.name else ''
+
+    if w_name and ws_num:
+        name = "%s: %s\u00a0%s" % (ws_num, glyph(ws_num), w_name)
+        i3.command('rename workspace "%s" to %s' % (ws_num, name))
 
 
 # Subscribe to events
@@ -72,7 +68,7 @@ i3.on('workspace::focus', on_workspace_focus)
 i3.on("window::focus", on_window_focus)
 i3.on("window::title", on_window_focus)
 i3.on("window::close", on_workspace_focus)
-i3.on("window::new", on_window_new)  # [sway] if window opened in another WS and not focused
+i3.on("window::new", on_window_new)
 
 # Start the main loop and wait for events to come in
 i3.main()
