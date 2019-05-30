@@ -60,7 +60,6 @@ def on_window_new(i3, e):
     w_name = e.container.name if e.container.name else ''
     print("W_name = ", w_name)
     con = i3.get_tree().find_by_id(e.container.id)
-    print("$$$$", con.workspace().name)
     if not w_name:
         print("con", con.name)
         w_name = con.name if con.name else ''
