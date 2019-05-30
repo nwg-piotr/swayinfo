@@ -32,32 +32,46 @@ def glyph(ws_number):
 
 # Give the workspace a generic name
 def on_workspace_focus(self, e):
+    print(">>> on_workspace_focus")
     con = i3.get_tree().find_focused()
-    ws_name = "{}: {}".format(con.workspace().num, glyph(con.workspace().num))
-    i3.command('rename workspace to "%s"' % ws_name)
+    ws_num = con.workspace().num
+    ws_old_name = con.workspace().name
+    ws_new_name = "%s: %s" % (ws_num, glyph(ws_num))
+    cmd = 'rename workspace {} to "{}"'.format(ws_old_name, ws_new_name)
+    print(cmd)
+    i3.command(cmd)
 
 
 # Name the workspace after the focused window name
 def on_window_focus(i3, e):
+    print(">>> on_window_focus")
     con = i3.get_tree().find_focused()
-    ws_name = "{}: {}\u00a0{}".format(con.workspace().num, glyph(con.workspace().num), con.name)
+    ws_old_name = con.workspace().name
+    ws_name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), con.name)
     name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
-    i3.command('rename workspace to "%s"' % name)
+    cmd = 'rename workspace "%s" to %s' % (ws_old_name, name)
+    print(cmd)
+    i3.command(cmd)
 
 
 # (Pre)name the workspace after the container name (if any)
 def on_window_new(i3, e):
+    print(">>> on_window_new")
     w_name = e.container.name if e.container.name else ''
+    print("W_name = ", w_name)
     con = i3.get_tree().find_by_id(e.container.id)
+    print("$$$$", con.workspace().name)
+    if not w_name:
+        print("con", con.name)
+        w_name = con.name if con.name else ''
     name = "{}: {}\u00a0{}".format(con.workspace().num, glyph(con.workspace().num), w_name)
-    i3.command('rename workspace {} to {}'.format(con.workspace().num, name))
+    i3.command('rename workspace to {}'.format(name))
 
 
 # Subscribe to events
 i3.on('workspace::focus', on_workspace_focus)
 i3.on("window::focus", on_window_focus)
 i3.on("window::title", on_window_focus)
-i3.on("window::focus", on_window_focus)
 i3.on("window::close", on_workspace_focus)
 i3.on("window::new", on_window_new)  # [sway] if window opened in another WS and not focused
 
