@@ -2,10 +2,15 @@
 # _*_ coding: utf-8 _*_
 
 """
-EARLY DEVELOPMENT VERSION, DON'T USE!
+This version has been tested on i3 only so far!
 
-Dynamic workspace names
-Based on the example code at https://pypi.org/project/i3ipc
+Dynamic workspace names for i3 and Sway window managers
+
+Author: Piotr Miller
+e-mail: nwg.piotr@gmail.com
+Project: https://github.com/nwg-piotr/swayinfo
+License: GPL3
+
 Depends on: i3ipc-python
 """
 
@@ -56,7 +61,7 @@ def on_window_focus(i3, e):
     execute_i3_command('rename workspace "%s" to %s' % (ws_old_name, name))
 
 
-# In sway it's possible to open a new window w/o moving focus; let's give it some name anyway.
+# In sway it's possible to open a new window w/o moving focus; let's give the workspace a name anyway.
 # i3 will just move focus to the workspace and the window, so workspace::focus and window::focus will be triggered,
 # which replace the name given here.
 def on_window_new(i3, e):
@@ -70,7 +75,7 @@ def on_window_new(i3, e):
         w_name = con.name if con.name else ''
     name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), w_name)
 
-    execute_i3_command('rename workspace {} to {}'.format(ws_num, name))
+    execute_i3_command('rename workspace "%s" to %s' % (ws_num, name))
 
 
 # Subscribe to events
