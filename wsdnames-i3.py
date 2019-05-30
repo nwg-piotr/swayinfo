@@ -40,10 +40,9 @@ def on_workspace_focus(self, e):
     print(">>> on_workspace_focus")
     con = i3.get_tree().find_focused()
     ws_num = con.workspace().num
-    ws_old_name = con.workspace().name
     ws_new_name = "%s: %s" % (ws_num, glyph(ws_num))
 
-    execute_i3_command('rename workspace {} to "{}"'.format(ws_old_name, ws_new_name))
+    execute_i3_command('rename workspace to "{}"'.format(ws_new_name))
 
 
 # Name the workspace after the focused window name
