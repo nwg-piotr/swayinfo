@@ -3,6 +3,7 @@
 
 """
 Dynamic workspace names for Sway
+WILL NOT WORK WELL ON i3!
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
