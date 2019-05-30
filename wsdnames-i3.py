@@ -2,7 +2,9 @@
 # _*_ coding: utf-8 _*_
 
 """
-This version has been tested on i3 only so far!
+This version was intended to work on as well on sway as on i3.
+For now on it works well for me on i3 one one machine and loops on another one, and I still don't know why.
+THIS IS A DEVELOPMENT VERSION, DO NOT USE
 
 Dynamic workspace names for i3 and Sway window managers
 
