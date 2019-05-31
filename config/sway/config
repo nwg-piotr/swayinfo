@@ -1,7 +1,5 @@
 # Customized config for sway
-#
 # Most of bindings come from the ArchLabs i3 config file
-#
 # Read `man 5 sway` for a complete reference.
 
 exec xrdb -load ~/.Xresources
@@ -31,48 +29,49 @@ set $gnome-schema org.gnome.desktop.interface
 	set $right semicolon
 
 # monitors
-set $Mon1 eDP-1
-set $Mon2 HDMI-A-1
+	set $Mon1 eDP-1
+	set $Mon2 HDMI-A-1
 
 # gaps
-gaps inner 5
-gaps outer 5
+	gaps inner 5
+	gaps outer 5
 
 # font
-font pango:DejaVu Sans Mono 10
+	font pango:DejaVu Sans Mono 10
 
 #
 # Autostart
 #
-exec_always nm-applet
-exec /home/piotr/PycharmProjects/swayinfo/wsdnames.py
+	exec_always nm-applet
 
-# To run java swing(broken) applications (e.g. IntelliJ)
-exec wmname LG3D
+	# Dynamic workspace names
+	exec /home/piotr/PycharmProjects/swayinfo/wsdnames-sway.py
 
-exec light -S 20
-exec amixer sset 'Master' 40%
-#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec lxpolkit
-exec gnome-keyring-daemon --start -bindsym-components=pkcs11
+	# To run java swing(broken) applications (e.g. IntelliJ)
+	exec wmname LG3D
 
-# Your preferred terminal emulator
-set $term tilix
+	exec light -S 20
+	exec amixer sset 'Master' 40%
+	#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+	exec lxpolkit
+	exec gnome-keyring-daemon --start -bindsym-components=pkcs11
 
-set $editor mousepad
-set $browser chromium
-set $filemanager thunar
+	# Your preferred terminal emulator
+	set $term tilix
+
+	set $editor mousepad
+	set $browser chromium
+	set $filemanager thunar
 
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
-set $menu dmenu_path | dmenu | xargs swaymsg exec
+	set $menu dmenu_path | dmenu | xargs swaymsg exec
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-#output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output eDP-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390.jpg fill
-output HDMI-A-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390-mirror.jpg fill
+	output eDP-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390.jpg fill
+	output HDMI-A-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390-mirror.jpg fill
 
 xwayland enable
 
@@ -85,16 +84,13 @@ xwayland enable
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
 ### Idle configuration
-#
-# Example configuration:
-#
 exec swayidle -w \
          timeout 600 'swaylock -f -c 000000' \
          timeout 900 'swaymsg "output * dpms off"' \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 #
-# This will lock your screen after 300 seconds of inactivity, then turn off
+# This will lock your screen after 600 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
 
@@ -112,11 +108,11 @@ exec swayidle -w \
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
-# keyboard layout
-input * xkb_layout "pl"
+	# keyboard layout
+	input * xkb_layout "pl"
 
-# numlock on
-input * xkb_numlock enabled
+	# numlock on
+	input * xkb_numlock enabled
 
 ### Key bindings
 #
@@ -125,6 +121,7 @@ input * xkb_numlock enabled
     # start a terminal
     bindsym $mod+Return exec $term
     bindsym $mod+t exec $term
+    bindsym $mod+g exec gimp
 
     # start text editor
     bindsym $mod+e exec $editor
@@ -162,17 +159,17 @@ input * xkb_numlock enabled
     bindsym $mod+x exec rofr.sh -l
 
 # audio
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-bindsym XF86AudioStop exec playerctl stop
-bindsym XF86AudioRaiseVolume exec pamixer -i 2
-bindsym XF86AudioLowerVolume exec pamixer -d 2
-bindsym XF86AudioMute exec pamixer -t
+	bindsym XF86AudioPlay exec playerctl play-pause
+	bindsym XF86AudioNext exec playerctl next
+	bindsym XF86AudioPrev exec playerctl previous
+	bindsym XF86AudioStop exec playerctl stop
+	bindsym XF86AudioRaiseVolume exec pamixer -i 2
+	bindsym XF86AudioLowerVolume exec pamixer -d 2
+	bindsym XF86AudioMute exec pamixer -t
 
 # backlight
-bindsym XF86MonBrightnessUp exec light -A 5
-bindsym XF86MonBrightnessDown exec light -U 5
+	bindsym XF86MonBrightnessUp exec light -A 5
+	bindsym XF86MonBrightnessDown exec light -U 5
 
 # Borders
     new_window normal
@@ -254,8 +251,6 @@ bindsym XF86MonBrightnessDown exec light -U 5
 	bindsym $mod+Shift+7 move container to workspace number 7; workspace number 7
 	bindsym $mod+Shift+8 move container to workspace number 8; workspace number 8
 
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
 #
 # Layout stuff:
 #
@@ -298,63 +293,63 @@ bindsym XF86MonBrightnessDown exec light -U 5
 #
 # Resizing containers:
 #
-mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
+	mode "resize" {
+		# left will shrink the containers width
+		# right will grow the containers width
+		# up will shrink the containers height
+		# down will grow the containers height
+		bindsym $left resize shrink width 10px
+		bindsym $down resize grow height 10px
+		bindsym $up resize shrink height 10px
+		bindsym $right resize grow width 10px
 
-    # ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
+		# ditto, with arrow keys
+		bindsym Left resize shrink width 10px
+		bindsym Down resize grow height 10px
+		bindsym Up resize shrink height 10px
+		bindsym Right resize grow width 10px
 
-    # return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-bindsym $mod+r mode "resize"
+		# return to default mode
+		bindsym Return mode "default"
+		bindsym Escape mode "default"
+	}
+	bindsym $mod+r mode "resize"
 
-###################################################
-############    application settings   ############
-###################################################
+#
+# application settings
+#
+	for_window [class="(?i)(?:Steam|pavucontrol)"] floating enable, focus
+	for_window [class="(?i)(?:tilix|thunar)"] focus
+	for_window [class="(?i)(?:mousepad|Chromium|tint2conf)"] focus
 
-for_window [class="(?i)(?:Steam|pavucontrol)"] floating enable, focus
-for_window [class="(?i)(?:tilix|thunar)"] focus
-for_window [class="(?i)(?:mousepad|Chromium|tint2conf)"] focus
+	# Assign Applications to specific workspace
+	# get class with xprop
+	assign [class="(?i)(?:tint2conf)|pamac-manager"] → workspace number 1
+	assign [class="(?i)(?:tilix)"] → workspace number 5
+	assign [class="(?i)(?:mousepad)"] → workspace number 5
+	assign [class="(?i)(?:Chromium|qutebrowser)"] → workspace number 2
+	assign [class="(?i)(?:thunar)"] → workspace number 4
+	assign [class="(?i)(?:Steam)"] → workspace number 4
+	assign [class="(?i)(?:gimp-*)"] → workspace number 6
+	assign [class="(?i)(?:inkscape)"] → workspace number 6
+	assign [class="(?i)(?:game.py)"] → workspace number 4
+	assign [title="squarely"] → workspace number 2
+	assign [title="Tilix*"] → workspace number 5
+	#assign [title="Menedżer*"] → workspace number 5
+	assign [class="(?i)(?:jetbrains*|codeblocks)"] → workspace number 8
 
-# Assign Applications to specific workspace
-# get class with xprop
-assign [class="(?i)(?:tint2conf)|pamac-manager"] → workspace number 1
-assign [class="(?i)(?:tilix)"] → workspace number 5
-assign [class="(?i)(?:mousepad)"] → workspace number 5
-assign [class="(?i)(?:Chromium|qutebrowser)"] → workspace number 2
-assign [class="(?i)(?:thunar)"] → workspace number 4
-assign [class="(?i)(?:Steam)"] → workspace number 4
-assign [class="(?i)(?:gimp-*)"] → workspace number 6
-assign [class="(?i)(?:inkscape)"] → workspace number 6
-assign [class="(?i)(?:game.py)"] → workspace number 4
-assign [title="squarely"] → workspace number 2
-assign [title="Tilix*"] → workspace number 5
-assign [class="(?i)(?:jetbrains*|codeblocks)"] → workspace number 8
-
-# focus, floating, & sticky
-for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
-for_window [class="(?i)(?:pavucontrol|termite|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
-for_window [window_role="(?i)(?:pop-up|setup|Arch)"] floating enable, focus
-for_window [title="Google Hangouts*"] resize set width 560 px
-for_window [title="squarely*"] resize set height 870 px
-for_window [class="(?i)(?:codeblocks|tilix|jetbrains*)"] focus
-for_window [title="Confirm*|Preferencje*|Sterowanie g*|Calendar*"] floating enable
-for_window [title="galculator*"] floating enable
-for_window [title="Chromium*"] border none
-for_window [title="xfce4-*"] border none
-for_window [title="Tilix*"] focus
+	# focus, floating, & sticky
+	for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
+	for_window [class="(?i)(?:pavucontrol|termite|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
+	for_window [window_role="(?i)(?:pop-up|setup|Arch)"] floating enable, focus
+	for_window [title="Google Hangouts*"] resize set width 560 px
+	for_window [title="squarely*"] resize set height 870 px
+	for_window [class="(?i)(?:codeblocks|tilix|jetbrains*)"] focus
+	for_window [title="Confirm*|Preferencje*|Sterowanie g*|Calendar*"] floating enable
+	for_window [title="galculator*"] floating enable
+	for_window [title="Chromium*"] border none
+	for_window [title="xfce4-*"] border none
+	for_window [title="Tilix*"] focus
 
 #
 # Status Bar(s):
@@ -411,14 +406,10 @@ bar {
     }
     font pango:Ubuntu Mono Nerd 10
     output HDMI-A-1
-
-	#status_command while /home/piotr/PycharmProjects/swayinfo/weather.py -IcdtphwS; do sleep 1800; done
-	#status_command py3status -c /home/piotr/.config/py3status/config_secondary_top
 }
 
 # /etc/sway/config.d/swayshot file uses `Mod1` variable instead of `mod1`
 # Let's comment it out and substitute below
-
 # include /etc/sway/config.d/*
 
 bindsym Print exec swayshot

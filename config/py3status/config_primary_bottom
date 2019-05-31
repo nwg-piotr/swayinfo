@@ -1,0 +1,62 @@
+general {
+    color = '#FFFFFF'
+    color_good = '#FFFFFF'
+    color_bad = '#666666'
+    color_degraded = '#999999'
+}
+
+order += "external_script swayinfo"
+order += "online_status"
+order += "mpris"
+order += "volume_status"
+order += "backlight"
+order += "scratchpad_counter"
+
+online_status {
+	cache_timeout = 10
+	format_offline = ""
+	format_online = ""
+	timeout = 20
+	color_on = "#FFFFFF"
+	color_off = "#FF0000"
+}
+
+external_script swayinfo {
+    format = "{output}"
+    script_path = "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N"
+    cache_timeout = 3
+}
+
+mpris {
+    format = "[{artist}: ][{title}] {previous} {toggle} {next}"
+    format_none = "silence"
+    icon_next = ""
+    icon_pause = ""
+    icon_play = ""
+    icon_previous = ""
+    icon_stop = ""
+    on_click 1 = "exec audacious"
+}
+
+volume_status {
+	format = "[\?if=is_input ] {percentage}%"
+	format_muted = "[\?if=is_input | muted]"
+	thresholds = [
+		(0, "#FFFFFF"),
+		(90, "#FFFFFF")
+    	]
+	color_muted = "#CCCCCC"
+	command = "pactl"
+	on_click 3 = "exec pavucontrol"
+}
+
+backlight {
+	format = " {level}%"
+	command = "light"
+	brightness_delta = 5
+}
+
+scratchpad_counter {
+	format = " {counter}"
+	on_click 1 = "scratchpad show"
+}

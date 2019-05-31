@@ -11,36 +11,28 @@ general {
     color_good = '#FFFFFF'
     color_bad = '#666666'
     color_degraded = '#999999'
-    interval = 5
 }
 
-order += "window_title_async"
-order += "clock"
-order += "mpris"
-order += "volume_status"
-order += "backlight"
-order += "scratchpad_counter"
+#order += "window_title_async"
 order += "external_script bbswitch"
+order += "external_script myweather"
+order += "clock"
 order += "static_string i3lock"
-# order += "static_string screenshot"
-order += "online_status"
 order += "arch_updates"
 order += "battery_level"
 order += "external_script battery_warning"
 
-#⌚⌛◷
-#
-#
+external_script myweather {
+    format = "{output}"
+    script_path = "/home/piotr/PycharmProjects/swayinfo/weather.py -Idt"
+    cache_timeout = 1800
+    on_click 1 = "exec /home/piotr/PycharmProjects/swayinfo/weather.py -D"
+}
 
 window_title_async {
 	format = "\[ {title} \]"
 	color = "#00FFFF"
 	max_width = 40
-}
-
-scratchpad_counter {
-	format = " {counter}"
-	on_click 1 = "scratchpad show"
 }
 
 mpris {
@@ -51,6 +43,7 @@ mpris {
     icon_play = ""
     icon_previous = ""
     icon_stop = ""
+    on_click 1 = "exec audacious"
 }
 
 battery_level{
@@ -70,35 +63,9 @@ battery_level{
 }
 
 arch_updates {
-	format = "{total}"
+	format = "{pacman}/{aur}"
+	hide_if_zero = False
 	on_click 1 = "exec tilix -t Arch -e \'trizen -Syu\' && killall -USR1 py3status"
-}
-
-backlight {
-	format = " {level}%"
-	command = "light"
-	brightness_delta = 5
-}
-
-volume_status {
-	format = "[\?if=is_input ] {percentage}%"
-	format_muted = "[\?if=is_input | muted]"
-	thresholds = [
-		(0, "#FFFFFF"),
-		(90, "#FFFFFF")
-    	]
-	color_muted = "#CCCCCC"
-	command = "pactl"
-	on_click 3 = "exec pavucontrol"
-}
-
-online_status {
-	cache_timeout = 10
-	format_offline = ""
-	format_online = ""
-	timeout = 20
-	color_on = "#FFFFFF"
-	color_off = "#FF0000"
 }
 
 static_string screenshot {
@@ -112,7 +79,7 @@ static_string i3lock {
 }
 
 clock {
-	#format = "{Local}"
+	on_click 1 = "exec zenity --calendar --title Calendar --text="
 }
 
 external_script bbswitch {
