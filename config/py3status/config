@@ -22,6 +22,10 @@ order += "arch_updates"
 order += "battery_level"
 order += "external_script battery_warning"
 
+#⌚⌛◷
+#
+#
+
 external_script myweather {
     format = "{output}"
     script_path = "/home/piotr/PycharmProjects/swayinfo/weather.py -Idt"
@@ -65,7 +69,8 @@ battery_level{
 arch_updates {
 	format = "{pacman}/{aur}"
 	hide_if_zero = False
-	on_click 1 = "exec tilix -t Arch -e \'trizen -Syu\' && killall -USR1 py3status"
+	#on_click 1 = "exec tilix -t Arch -e \'trizen -Syu\' && killall -USR1 py3status"
+	on_click 1 = "exec tilix"
 }
 
 static_string screenshot {

@@ -42,18 +42,18 @@ set $gnome-schema org.gnome.desktop.interface
 #
 # Autostart
 #
-	exec_always nm-applet
+	# exec_always nm-applet (does not work, fucker)
 
 	# Dynamic workspace names
-	exec /home/piotr/PycharmProjects/swayinfo/wsdnames-sway.py
+	exec /home/piotr/PycharmProjects/swayinfo/wsdnames-sway-dev.py -l
 
 	# To run java swing(broken) applications (e.g. IntelliJ)
 	exec wmname LG3D
 
 	exec light -S 20
 	exec amixer sset 'Master' 40%
-	#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-	exec lxpolkit
+	exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+	#exec lxpolkit
 	exec gnome-keyring-daemon --start -bindsym-components=pkcs11
 
 	# Your preferred terminal emulator
@@ -61,25 +61,24 @@ set $gnome-schema org.gnome.desktop.interface
 
 	set $editor mousepad
 	set $browser chromium
-	set $filemanager thunar
+	set $filemanager caja
 
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
 	set $menu dmenu_path | dmenu | xargs swaymsg exec
-
-### Output configuration
-#
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-	output eDP-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390.jpg fill
-	output HDMI-A-1 bg /home/piotr/Obrazy/Wallpapers/wallhaven-716390-mirror.jpg fill
 
 xwayland enable
 
 #
 # Output configuration:
 #
-   output eDP-1 resolution 1920x1080 position 1920,0
-   output HDMI-A-1 resolution 1920x1080 position 3840,0
+	output eDP-1 resolution 1920x1080 position 0,0
+	output HDMI-A-1 resolution 1920x1080 position 1920,0
+	# output HDMI-A-1 disable
+
+	#output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-zmoxry.jpg fill
+	exec ~/.azotebg
+
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
@@ -129,6 +128,9 @@ exec swayidle -w \
     # start web browser
     bindsym $mod+w exec $browser
 
+    # start wallpaper manager
+    bindsym $mod+c exec azote
+
     # start file manager
     bindsym $mod+f exec $filemanager
 
@@ -172,8 +174,8 @@ exec swayidle -w \
 	bindsym XF86MonBrightnessDown exec light -U 5
 
 # Borders
-    new_window normal
-    new_float normal
+    default_border normal
+    default_floating_border normal
     hide_edge_borders both
     popup_during_fullscreen smart
 
@@ -325,29 +327,28 @@ exec swayidle -w \
 	# Assign Applications to specific workspace
 	# get class with xprop
 	assign [class="(?i)(?:tint2conf)|pamac-manager"] → workspace number 1
-	assign [class="(?i)(?:tilix)"] → workspace number 5
-	assign [class="(?i)(?:mousepad)"] → workspace number 5
 	assign [class="(?i)(?:Chromium|qutebrowser)"] → workspace number 2
-	assign [class="(?i)(?:thunar)"] → workspace number 4
 	assign [class="(?i)(?:Steam)"] → workspace number 4
 	assign [class="(?i)(?:gimp-*)"] → workspace number 6
 	assign [class="(?i)(?:inkscape)"] → workspace number 6
+	assign [class="(?i)(?:feh)"] → workspace number 6
 	assign [class="(?i)(?:game.py)"] → workspace number 4
 	assign [title="squarely"] → workspace number 2
-	assign [title="Tilix*"] → workspace number 5
-	#assign [title="Menedżer*"] → workspace number 5
 	assign [class="(?i)(?:jetbrains*|codeblocks)"] → workspace number 8
 
 	# focus, floating, & sticky
 	for_window [title="(?i)(?:copying|deleting|moving|catfish)"] floating enable, border none
 	for_window [class="(?i)(?:pavucontrol|termite|game.py|galculator|baobab|gnome-disks)"] floating enable, focus
 	for_window [window_role="(?i)(?:pop-up|setup|Arch)"] floating enable, focus
+	for_window [window_role="(?i)(?:browser)"] floating disable
 	for_window [title="Google Hangouts*"] resize set width 560 px
 	for_window [title="squarely*"] resize set height 870 px
 	for_window [class="(?i)(?:codeblocks|tilix|jetbrains*)"] focus
 	for_window [title="Confirm*|Preferencje*|Sterowanie g*|Calendar*"] floating enable
 	for_window [title="galculator*"] floating enable
-	for_window [title="Chromium*"] border none
+	for_window [title="Azote*"] floating enable, focus
+	for_window [title="feh*"] floating enable, focus
+	for_window [title="Chromium*"] floating disable, border none
 	for_window [title="xfce4-*"] border none
 	for_window [title="Tilix*"] focus
 

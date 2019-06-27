@@ -23,7 +23,7 @@ online_status {
 
 external_script swayinfo {
     format = "{output}"
-    script_path = "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N"
+    script_path = "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CkgaMtfNu -N -W0"
     cache_timeout = 3
 }
 
