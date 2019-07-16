@@ -1,0 +1,92 @@
+#!/usr/bin/python3
+# _*_ coding: utf-8 _*_
+
+"""
+This simple script displays i3 or Sway key bindings found in the ~/.config/i3/config or ~/.config/sway/config file
+in a GTK+ scrolling window. Save anywhere, make executable, run w/o arguments for i3, or `cheatsheet sway` for Sway.
+
+Author: Piotr Miller
+e-mail: nwg.piotr@gmail.com
+Website: https://github.com/nwg-piotr/swayinfo
+License: GPL-3.0-or-later
+
+Depends on: python-pygobjects
+"""
+
+import os
+import gi
+import sys
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gdk, Pango
+
+
+def get_bindings(mode):
+    config = os.path.join(os.getenv('HOME'), '.config/{}/config'.format(mode))
+    if os.path.isfile(config):
+        with open(config) as f:
+            content = f.readlines()
+        bindings = []
+        for line in content:
+            line = line.strip()
+            if line.strip().startswith('bindsym') or line.startswith('bindcode'):
+                words = line.split()
+                bindings.append(' '.join(words[1:]))
+
+        return sorted(bindings)
+    else:
+        print('{} file not found'.format(config))
+        exit(1)
+
+
+class GUI:
+    def __init__(self, mode):
+        config = os.path.join(os.getenv('HOME'), '.config/{}/config'.format(mode))
+        lines = get_bindings(mode)
+
+        screen = Gdk.Screen.get_default()
+        w, h = screen.get_width(), screen.get_height()
+        print(w, h)
+        window = Gtk.Window()
+        window.set_default_size(h * 0.7, h * 0.95)
+        window.set_title("Cheatsheet for {}".format(mode))
+        window.connect_after('destroy', self.destroy)
+
+        preview = Gtk.ScrolledWindow()
+        preview.set_border_width(10)
+        preview.set_propagate_natural_height(True)
+        preview.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.ALWAYS)
+
+        text_view = Gtk.TextView()
+        text_view.set_editable(False)
+        text_buffer = text_view.get_buffer()
+        tag_bold = text_buffer.create_tag("bold", weight=Pango.Weight.BOLD)
+
+        for line in lines:
+            parts = line.split()
+            key = parts[0]
+            command = ' '.join(parts[1:])
+            position = text_buffer.get_end_iter()
+            text_buffer.insert_with_tags(position, '[{} ] - '.format(key), tag_bold)
+            position = text_buffer.get_end_iter()
+            text_buffer.insert(position, ' {}\n'.format(command))
+
+        position = text_buffer.get_end_iter()
+        text_buffer.insert_with_tags(position, '\n{}'.format(config), tag_bold)
+
+        preview.add(text_view)
+
+        window.add(preview)
+        window.show_all()
+
+    def destroy(window, self):
+        Gtk.main_quit()
+
+
+def main():
+    mode = 'sway' if len(sys.argv) > 1 and sys.argv[1].upper() == 'SWAY' else 'i3'
+    app = GUI(mode)
+    Gtk.main()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
