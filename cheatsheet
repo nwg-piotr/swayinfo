@@ -44,8 +44,7 @@ class GUI:
         lines = get_bindings(mode)
 
         screen = Gdk.Screen.get_default()
-        w, h = screen.get_width(), screen.get_height()
-        print(w, h)
+        h = screen.get_height()
         window = Gtk.Window()
         window.set_default_size(h * 0.7, h * 0.95)
         window.set_title("Cheatsheet for {}".format(mode))
@@ -74,7 +73,6 @@ class GUI:
         text_buffer.insert_with_tags(position, '\n{}'.format(config), tag_bold)
 
         preview.add(text_view)
-
         window.add(preview)
         window.show_all()
 
