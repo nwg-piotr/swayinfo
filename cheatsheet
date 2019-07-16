@@ -10,7 +10,7 @@ e-mail: nwg.piotr@gmail.com
 Website: https://github.com/nwg-piotr/swayinfo
 License: GPL-3.0-or-later
 
-Depends on: python-gobject
+Depends on: python (python3) python-gobject
 """
 
 import os
@@ -28,7 +28,7 @@ def get_bindings(mode):
         bindings = []
         for line in content:
             line = line.strip()
-            if line.strip().startswith('bindsym') or line.startswith('bindcode'):
+            if line.startswith('bindsym') or line.startswith('bindcode'):
                 words = line.split()
                 bindings.append(' '.join(words[1:]))
 
