@@ -10,7 +10,7 @@ e-mail: nwg.piotr@gmail.com
 Website: https://github.com/nwg-piotr/swayinfo
 License: GPL-3.0-or-later
 
-Depends on: python-pygobjects
+Depends on: python-gobject
 """
 
 import os
