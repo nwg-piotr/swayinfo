@@ -51,11 +51,14 @@ class GUI:
         window.connect_after('destroy', self.destroy)
 
         preview = Gtk.ScrolledWindow()
-        preview.set_border_width(10)
         preview.set_propagate_natural_height(True)
         preview.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.ALWAYS)
 
         text_view = Gtk.TextView()
+        text_view.set_top_margin(10)
+        text_view.set_left_margin(10)
+        text_view.set_bottom_margin(10)
+        text_view.set_right_margin(10)
         text_view.set_editable(False)
         text_buffer = text_view.get_buffer()
         tag_bold = text_buffer.create_tag("bold", weight=Pango.Weight.BOLD)
