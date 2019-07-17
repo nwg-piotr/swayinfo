@@ -4,7 +4,6 @@
 """
 Dynamic workspace names for Sway
 Development version: run with `-l | log` argument to enable logging to ~/.wsdnames/log.txt
-WILL NOT WORK WELL ON i3!
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
@@ -69,11 +68,13 @@ def on_window_focus(i3, e):
     try:
         con = i3.get_tree().find_focused()
 
+        # ⇢⇣⇉⇊⍈⍗◑◒☞☟⿰⿱
+        # Prepend with the tiling mode indication
         layout = con.parent.layout
         if layout == 'splith':
-            split_text = ''
+            split_text = '⇢'
         elif layout == 'splitv':
-            split_text = ''
+            split_text = '⇣'
         else:
             split_text = ''
 
