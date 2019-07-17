@@ -25,6 +25,9 @@ max_width = 30
 # Create the Connection object that can be used to send commands and subscribe to events.
 i3 = i3ipc.Connection()
 
+splitv_text = 'V'
+splith_text = 'H'
+
 log_dir = os.getenv("HOME") + "/.wsdnames"
 if not os.path.isdir(log_dir):
     os.mkdir(log_dir)
@@ -65,8 +68,17 @@ def on_workspace_focus(self, e):
 def on_window_focus(i3, e):
     try:
         con = i3.get_tree().find_focused()
+
+        layout = con.parent.layout
+        if layout == 'splith':
+            split_text = ''
+        elif layout == 'splitv':
+            split_text = ''
+        else:
+            split_text = ''
+
         ws_old_name = con.workspace().name
-        ws_name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), con.name)
+        ws_name = "%s: %s\u00a0%s %s " % (con.workspace().num, glyph(con.workspace().num), split_text, con.name)
         name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
 
         i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
@@ -115,6 +127,7 @@ def main():
     i3.on("window::title", on_window_focus)
     i3.on("window::close", on_workspace_focus)
     i3.on("window::new", on_window_new)
+    i3.on("binding", on_window_focus)
 
     # Start the main loop and wait for events to come in
     i3.main()
