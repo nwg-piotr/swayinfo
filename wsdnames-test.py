@@ -18,7 +18,7 @@ Depends on: i3ipc-python
 import i3ipc
 import logging
 import os
-import sys
+import pkg_resources
 
 # truncate workspace name to this value
 max_width = 30
@@ -59,10 +59,7 @@ def on_workspace_focus(self, e):
         i3.command('rename workspace to "{}"'.format(ws_new_name))
 
     except Exception as ex:
-        if logs:
-            logging.error("on_workspace_focus: %s") % ex
-        else:
-            pass
+        exit(ex)
 
 
 # Name the workspace after the focused window name
@@ -91,10 +88,7 @@ def on_window_focus(i3, e):
         i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
 
     except Exception as ex:
-        if logs:
-            logging.error("on_window_focus: %s") % ex
-        else:
-            pass
+        exit(ex)
 
 
 # In sway it's possible to open a new window w/o moving focus; let's give the workspace a name anyway.
@@ -111,22 +105,10 @@ def on_window_new(i3, e):
             logging.warning('on_window_new: WS number or window name unknown')
 
     except Exception as ex:
-        if logs:
-            logging.error("on_window_new: %s") % ex
-        else:
-            pass
+        exit(ex)
 
 
 def main():
-    if len(sys.argv) > 1:
-        for arg in sys.argv:
-            if arg == "-l" or arg == "--log":
-                global logs
-                logs = True
-    if logs:
-        logging.basicConfig(filename=log_file, format='%(asctime)s %(levelname)s: %(message)s', filemode='w',
-                            level=logging.DEBUG)
-        logging.info('Starting wsdnames')
 
     # Subscribe to events
     i3.on('workspace::focus', on_workspace_focus)
@@ -134,7 +116,14 @@ def main():
     i3.on("window::title", on_window_focus)
     i3.on("window::close", on_workspace_focus)
     i3.on("window::new", on_window_new)
-    i3.on("binding", on_window_focus)
+    """
+    The event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
+    To be able to uncomment it (recommended), you must meet one of requirements below:
+    - use i3 instead on Sway, or
+    - use the -git version of the i3ipc-python package, or
+    - manually fix the i3ipc.py library in line 258 (see https://github.com/acrisci/i3ipc-python/pull/105).
+    """
+    # i3.on("binding", on_window_focus)
 
     # Start the main loop and wait for events to come in
     i3.main()
