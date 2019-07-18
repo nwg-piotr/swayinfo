@@ -67,14 +67,15 @@ def on_workspace_focus(self, e):
 def on_window_focus(i3, e):
     try:
         con = i3.get_tree().find_focused()
+        is_floating = con.type == 'floating_con'
 
-        # ⇢⇣⇉⇊⍈⍗◑◒☞☟⿰⿱
+        # ⇢⇣⇉⇊⍈⍗◑◒☞☟⿰⿱
         # Prepend with the tiling mode indication
         layout = con.parent.layout
         if layout == 'splith':
-            split_text = '⇢'
+            split_text = '⇢' if not is_floating else ''
         elif layout == 'splitv':
-            split_text = '⇣'
+            split_text = '⇣' if not is_floating else ''
         else:
             split_text = ''
 
