@@ -2,7 +2,10 @@
 # _*_ coding: utf-8 _*_
 
 """
-Dynamic workspace names for Sway and i3
+Dynamic workspace names for Sway
+
+The script should also work on i3, but for some reason it works well for me on one machine, and loops on another one.
+Use on i3 at your own risk.
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
@@ -98,13 +101,11 @@ def main():
     i3.on("window::close", on_workspace_focus)
     i3.on("window::new", on_window_new)
     """
-    The commented out event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
-    To be able to uncomment it (recommended), you must meet one of following requirements:
-
-    - use i3 instead on Sway, or
-    - use the -git version of the i3ipc-python package
-
-    See https://github.com/acrisci/i3ipc-python/pull/105
+    The event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
+    To be able to uncomment it (recommended), you need a fixed library version:
+    
+    - use the -git version of the i3ipc-python package, or
+    - see https://github.com/acrisci/i3ipc-python/pull/105 and fix the library locally.
     """
     i3.on("binding", on_window_focus)
 
