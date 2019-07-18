@@ -42,12 +42,11 @@ set $gnome-schema org.gnome.desktop.interface
 #
 # Autostart
 #
-	# exec_always nm-applet (does not work, fucker)
 
 	# Dynamic workspace names
 	exec /home/piotr/PycharmProjects/swayinfo/wsdnames-sway-dev.py -l
 
-	# To run java swing(broken) applications (e.g. IntelliJ)
+	# To run java swing (broken) applications (e.g. IntelliJ)
 	exec wmname LG3D
 
 	exec light -S 20
@@ -65,7 +64,8 @@ set $gnome-schema org.gnome.desktop.interface
 
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
-	set $menu dmenu_path | dmenu | xargs swaymsg exec
+	# set $menu dmenu_path | dmenu | xargs swaymsg exec
+	set $menu j4-dmenu-desktop --dmenu='bemenu -i --nb "#3f3f3f" --nf "#dcdccc" --fn "pango:DejaVu Sans Mono 12"' --term='tilix'
 
 xwayland enable
 
@@ -75,6 +75,10 @@ xwayland enable
 	output eDP-1 resolution 1920x1080 position 0,0
 	output HDMI-A-1 resolution 1920x1080 position 1920,0
 	# output HDMI-A-1 disable
+
+	set $laptop eDP-1
+	bindswitch lid:on output $laptop disable
+	bindswitch lid:off output $laptop enable
 
 	#output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-zmoxry.jpg fill
 	exec ~/.azotebg
@@ -130,13 +134,14 @@ exec swayidle -w \
 
     # start wallpaper manager
     bindsym $mod+c exec azote
+    bindsym mod1+c exec ~/PycharmProjects/swayinfo/cheatsheet sway
 
     # start file manager
     bindsym $mod+f exec $filemanager
 
     # kill focused window
     bindsym $mod+Shift+q kill
-    bindsym Mod1+q kill
+    bindsym mod1+q kill
 
     # start your launcher
     bindsym $mod+d exec $menu
@@ -145,7 +150,7 @@ exec swayidle -w \
     bindsym Control+space exec rofr.sh -r
 
 # this is needed for super key to launch rofi
-    bindsym Mod1+F1 exec rofr.sh -r
+    bindsym mod1+F1 exec rofr.sh -r
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -259,7 +264,7 @@ exec swayidle -w \
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+b splith
+    bindsym $mod+h splith
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
@@ -347,8 +352,9 @@ exec swayidle -w \
 	for_window [title="Confirm*|Preferencje*|Sterowanie g*|Calendar*"] floating enable
 	for_window [title="galculator*"] floating enable
 	for_window [title="Azote*"] floating enable, focus
+	for_window [title="Cheatsheet*"] floating enable, focus
 	for_window [title="feh*"] floating enable, focus
-	for_window [title="Chromium*"] floating disable, border none
+	for_window [class="Chromium*"] floating disable, border none
 	for_window [title="xfce4-*"] border none
 	for_window [title="Tilix*"] focus
 
