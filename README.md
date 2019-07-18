@@ -14,10 +14,15 @@ to share, include description in the file header. For them all to work you need 
 This script uses the `python-i3ipc` module to dynamically rename workspaces after the currently active window. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator.
 
-The "stable" version is the [wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py) file.
+**i3ipc-python 1.7.1 crashes on the 'binding' event in Sway!**
 
-The `python-i3ipc` (or `i3ipc-python`) package may or may not exist for certain Linux distributions. 
-For Arch Linux you'll find it in AUR. For it to work well, use the -git version (see comments inside the file).
+That's why in the "stable" version of the script ([wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)) 
+line #109 is commented out. The bug [has already been fixed](https://github.com/acrisci/i3ipc-python/pull/105), 
+but the latest release does not yet contain the fix. If possible, you should use the -git version of the package.
+
+**If you use i3 or fixed i3ipc.py library**, uncomment `i3.on("binding", on_window_focus)` in line 109.
+
+**i3 / sway config file:**
 
 Pay attention to the fact, that your workspaces need to be **numbered**, not **named** for the script to work. 
 
