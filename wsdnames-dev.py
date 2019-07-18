@@ -2,39 +2,23 @@
 # _*_ coding: utf-8 _*_
 
 """
-EXPERIMENTAL, MAY OR MAY NOT WORK FOR YOU!
-
-Dynamic workspace names for Sway
-Development version: run with `-l | log` argument to enable logging to ~/.wsdnames/log.txt
+Dynamic workspace names for Sway and i3
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
 Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
 
-Depends on: i3ipc-python
+Depends on: i3ipc-python (python-i3ipc)
 """
 
 import i3ipc
-import logging
-import os
-import pkg_resources
 
 # truncate workspace name to this value
 max_width = 30
 
 # Create the Connection object that can be used to send commands and subscribe to events.
 i3 = i3ipc.Connection()
-
-splitv_text = 'V'
-splith_text = 'H'
-
-log_dir = os.getenv("HOME") + "/.wsdnames"
-if not os.path.isdir(log_dir):
-    os.mkdir(log_dir)
-log_file = log_dir + "/log.txt"
-
-logs = False
 
 
 # A glyph will substitute the WS name if no window active, otherwise it'll be prepended to the window name
@@ -101,15 +85,12 @@ def on_window_new(i3, e):
         if w_name and ws_num:
             name = "%s: %s\u00a0%s" % (ws_num, glyph(ws_num), w_name)
             i3.command('rename workspace "%s" to %s' % (ws_num, name))
-        else:
-            logging.warning('on_window_new: WS number or window name unknown')
 
     except Exception as ex:
         exit(ex)
 
 
 def main():
-
     # Subscribe to events
     i3.on('workspace::focus', on_workspace_focus)
     i3.on("window::focus", on_window_focus)
@@ -117,15 +98,16 @@ def main():
     i3.on("window::close", on_workspace_focus)
     i3.on("window::new", on_window_new)
     """
-    The event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
-    To be able to uncomment it (recommended), you must meet one of requirements below:
-    - use i3 instead on Sway, or
-    - use the -git version of the i3ipc-python package, or
-    - manually fix the i3ipc.py library in line 258 (see https://github.com/acrisci/i3ipc-python/pull/105).
-    """
-    # i3.on("binding", on_window_focus)
+    The commented out event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
+    To be able to uncomment it (recommended), you must meet one of following requirements:
 
-    # Start the main loop and wait for events to come in
+    - use i3 instead on Sway, or
+    - use the -git version of the i3ipc-python package
+
+    See https://github.com/acrisci/i3ipc-python/pull/105
+    """
+    i3.on("binding", on_window_focus)
+
     i3.main()
 
 
