@@ -2,6 +2,8 @@
 # _*_ coding: utf-8 _*_
 
 """
+EXPERIMENTAL, MAY OR MAY NOT WORK FOR YOU!
+
 Dynamic workspace names for Sway
 Development version: run with `-l | log` argument to enable logging to ~/.wsdnames/log.txt
 
