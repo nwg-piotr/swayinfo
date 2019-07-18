@@ -21,7 +21,8 @@ That's why in the "stable" version of the script ([wsdnames.py](https://github.c
 line #109 is commented out. The bug [has already been fixed](https://github.com/acrisci/i3ipc-python/pull/105), 
 but the latest release does not yet contain the fix. If possible, you should use the -git version of the package.
 
-**If you use i3 or fixed i3ipc.py library**, uncomment `i3.on("binding", on_window_focus)` in line 109.
+**If you use i3 or fixed i3ipc.py library**, uncomment `i3.on("binding", on_window_focus)` 
+in line [#109](https://github.com/nwg-piotr/swayinfo/blob/51d0cf5deaa770c6a6e77fa8f84c2b3880985ad1/wsdnames.py#L109).
 
 **i3 / sway config file:**
 
