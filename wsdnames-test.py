@@ -71,7 +71,7 @@ def on_window_focus(i3, e):
         con = i3.get_tree().find_focused()
         # con.type == 'floating_con'        - indicates floating enabled in Sway
         # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
-        is_floating = con.type == 'floating_con' or '_on' in con.floating
+        is_floating = con.type == 'floating_con' or con.floating and '_on' in con.floating
 
         # ⇢⇣⇉⇊⍈⍗◑◒☞☟⿰⿱     - these symbols display well in DejaVu Sans
 
