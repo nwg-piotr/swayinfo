@@ -1,6 +1,6 @@
 # swayinfo
-This is an attempt to reproduce my complete i3 workplace in the Sway environment. Those of them which I find "stable"
-include description in the file header. For them all to work you need packages as below:
+This is an attempt to reproduce my complete i3 workplace in the Sway environment. The scripts I find "stable" enough
+to share include description in the file header. For them all to work you need packages as below:
 
 - sway, swayinfo, swayidle
 - py3status, py3status-modules, python-pytz, python-tzlocal
