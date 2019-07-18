@@ -2,18 +2,14 @@
 # _*_ coding: utf-8 _*_
 
 """
-This version was intended to work on as well on sway as on i3.
-For now on it works well for me on i3 one one machine and loops on another one, and I still don't know why.
-THIS IS A DEVELOPMENT VERSION, DO NOT USE
-
-Dynamic workspace names for i3 and Sway window managers
+Dynamic workspace names for Sway and i3
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
 Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
 
-Depends on: i3ipc-python
+Depends on: i3ipc-python (python-i3ipc)
 """
 
 import i3ipc
@@ -37,55 +33,83 @@ def glyph(ws_number):
         return "?"
 
 
-def execute_i3_command(cmd):
-    print(cmd)  # just for testing
-    i3.command(cmd)
-
-
 # Give the workspace a generic name: "number: glyph" (like "1: ")
 def on_workspace_focus(self, e):
-    print(">>> on_workspace_focus")
-    con = i3.get_tree().find_focused()
-    ws_num = con.workspace().num
-    ws_new_name = "%s: %s" % (ws_num, glyph(ws_num))
+    try:
+        con = i3.get_tree().find_focused()
+        ws_num = con.workspace().num
+        ws_new_name = "%s: %s" % (ws_num, glyph(ws_num))
 
-    execute_i3_command('rename workspace to "{}"'.format(ws_new_name))
+        i3.command('rename workspace to "{}"'.format(ws_new_name))
+
+    except Exception as ex:
+        exit(ex)
 
 
 # Name the workspace after the focused window name
 def on_window_focus(i3, e):
-    print(">>> on_window_focus")
-    con = i3.get_tree().find_focused()
-    ws_old_name = con.workspace().name
-    ws_name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), con.name)
-    name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
+    try:
+        con = i3.get_tree().find_focused()
+        # con.type == 'floating_con'        - indicates floating enabled in Sway
+        # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
+        is_floating = con.type == 'floating_con' or con.floating and '_on' in con.floating
 
-    execute_i3_command('rename workspace "%s" to %s' % (ws_old_name, name))
+        # ⇢⇣⇉⇊⍈⍗◑◒☞☟⿰⿱     - these symbols display well in DejaVu Sans
+
+        # Tiling mode or floating indication
+        layout = con.parent.layout
+        if layout == 'splith':
+            split_text = '⇢' if not is_floating else ''
+        elif layout == 'splitv':
+            split_text = '⇣' if not is_floating else ''
+        else:
+            split_text = ''
+
+        ws_old_name = con.workspace().name
+        ws_name = "%s: %s\u00a0%s %s " % (con.workspace().num, glyph(con.workspace().num), split_text, con.name)
+        name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
+
+        i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
+
+    except Exception as ex:
+        exit(ex)
 
 
 # In sway it's possible to open a new window w/o moving focus; let's give the workspace a name anyway.
-# i3 will just move focus to the workspace and the window, so workspace::focus and window::focus will be triggered,
-# which replace the name given here.
 def on_window_new(i3, e):
-    print(">>> on_window_new")
-    w_name = e.container.name if e.container.name else ''  # This won't work in Sway
-    con = i3.get_tree().find_by_id(e.container.id)
-    ws_num = con.workspace().num
-    print("W_name = ", w_name, "in WS", ws_num)
-    if not w_name:  # Try to obtain the window name again (we must be in Sway)
-        print("con", con.name)
+    try:
+        con = i3.get_tree().find_by_id(e.container.id)
+        ws_num = con.workspace().num
         w_name = con.name if con.name else ''
-    name = "%s: %s\u00a0%s" % (con.workspace().num, glyph(con.workspace().num), w_name)
 
-    execute_i3_command('rename workspace "%s" to %s' % (ws_num, name))
+        if w_name and ws_num:
+            name = "%s: %s\u00a0%s" % (ws_num, glyph(ws_num), w_name)
+            i3.command('rename workspace "%s" to %s' % (ws_num, name))
+
+    except Exception as ex:
+        exit(ex)
 
 
-# Subscribe to events
-i3.on('workspace::focus', on_workspace_focus)
-i3.on("window::focus", on_window_focus)
-i3.on("window::title", on_window_focus)
-i3.on("window::close", on_workspace_focus)
-i3.on("window::new", on_window_new)
+def main():
+    # Subscribe to events
+    i3.on('workspace::focus', on_workspace_focus)
+    i3.on("window::focus", on_window_focus)
+    i3.on("window::title", on_window_focus)
+    i3.on("window::close", on_workspace_focus)
+    i3.on("window::new", on_window_new)
+    """
+    The commented out event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
+    To be able to uncomment it (recommended), you must meet one of following requirements:
+    
+    - use i3 instead on Sway, or
+    - use the -git version of the i3ipc-python package
+    
+    See https://github.com/acrisci/i3ipc-python/pull/105
+    """
+    # i3.on("binding", on_window_focus)
 
-# Start the main loop and wait for events to come in
-i3.main()
+    i3.main()
+
+
+if __name__ == "__main__":
+    main()
