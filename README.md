@@ -45,6 +45,6 @@ in your `~/.config/sway/config` file. See the [example config](https://github.co
 
 ### i3 compatibility
 
-The script **should** work well on i3, but for some mysterious reason it works well for me on 2 of my 3 machines.
+The script **should** work well on i3, but for some mysterious reason it behaves correctly on 2 of my 3 machines.
 On the third one, one event seems to trigger another one, and the program loops. This needs further investigation.
 For now use on i3 at your own risk.
