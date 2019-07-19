@@ -44,7 +44,7 @@ set $gnome-schema org.gnome.desktop.interface
 #
 
 	# Dynamic workspace names
-	exec /home/piotr/PycharmProjects/swayinfo/wsdnames-sway-dev.py -l
+	exec /home/piotr/PycharmProjects/swayinfo/wsdnames.py
 
 	# To run java swing (broken) applications (e.g. IntelliJ)
 	exec wmname LG3D
