@@ -11,4 +11,8 @@ Use the [i3ipc-python-git](https://aur.archlinux.org/packages/i3ipc-python-git) 
 
 Since it's no way to create a -git package for Void, I built a temporary `python3-i3ipc-1.7.1_1.noarch.xbps` package,
 which includes the necessary fixes for Sway. Download it and install from a local repository. 
-See https://voidlinux.org/usage/xbps for instructions on how to create local repositories.
+
+```bash
+$ xbps-rindex -a /path/to/local-repo/*.xbps
+$ xbps-install -S python3-i3ipc --repository=/path/to/local-repo
+```
