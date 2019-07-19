@@ -53,26 +53,25 @@ def on_workspace_focus(self, e):
 def on_window_focus(i3, e):
     try:
         con = i3.get_tree().find_focused()
-        # con.type == 'floating_con'        - indicates floating enabled in Sway
-        # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
-        is_floating = con.type == 'floating_con' or con.floating and '_on' in con.floating
+        if not con.type == 'workspace':         # avoid renaming new empty workspaces on 'binding' event
+            # con.type == 'floating_con'        - indicates floating enabled in Sway
+            # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
+            is_floating = con.type == 'floating_con' or con.floating and '_on' in con.floating
 
-        # ⇢⇣⇉⇊⍈⍗◑◒☞☟⿰⿱     - these symbols display well in DejaVu Sans
+            # Tiling mode or floating indication
+            layout = con.parent.layout
+            if layout == 'splith':
+                split_text = '⇢' if not is_floating else ''
+            elif layout == 'splitv':
+                split_text = '⇣' if not is_floating else ''
+            else:
+                split_text = ''
 
-        # Tiling mode or floating indication
-        layout = con.parent.layout
-        if layout == 'splith':
-            split_text = '⇢' if not is_floating else ''
-        elif layout == 'splitv':
-            split_text = '⇣' if not is_floating else ''
-        else:
-            split_text = ''
+            ws_old_name = con.workspace().name
+            ws_name = "%s: %s\u00a0%s %s " % (con.workspace().num, glyph(con.workspace().num), split_text, con.name)
+            name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
 
-        ws_old_name = con.workspace().name
-        ws_name = "%s: %s\u00a0%s %s " % (con.workspace().num, glyph(con.workspace().num), split_text, con.name)
-        name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
-
-        i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
+            i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
 
     except Exception as ex:
         exit(ex)
