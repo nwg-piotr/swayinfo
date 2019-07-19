@@ -18,8 +18,9 @@ The name is prepended with either tiling mode (horizontal / vertical) or floatin
 **i3ipc-python 1.7.1 crashes on the 'binding' event in Sway!**
 
 That's why in the "stable" version of the script ([wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)) 
-line #109 is commented out. The bug [has already been fixed](https://github.com/acrisci/i3ipc-python/pull/105), 
+line #109 is commented out. The bug has already been fixed, 
 but the latest release does not yet contain the fix. If possible, you should use the -git version of the package.
+Check the [i3ipc folder](https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc) for more info.
 
 **If you use i3 or fixed i3ipc.py library**, uncomment `i3.on("binding", on_window_focus)` 
 in line [#109](https://github.com/nwg-piotr/swayinfo/blob/51d0cf5deaa770c6a6e77fa8f84c2b3880985ad1/wsdnames.py#L109).
