@@ -25,7 +25,7 @@ Check the [i3ipc folder](https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc
 **If you use a fixed i3ipc library**, uncomment `i3.on("binding", on_window_focus)` 
 in line [#109](https://github.com/nwg-piotr/swayinfo/blob/51d0cf5deaa770c6a6e77fa8f84c2b3880985ad1/wsdnames.py#L109).
 
-**i3 / sway config file:**
+**sway config file:**
 
 Pay attention to the fact, that your workspaces need to be **numbered**, not **named** for the script to work. 
 
