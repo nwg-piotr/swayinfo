@@ -1,4 +1,4 @@
-# i3ipc-python 1.7.1 is broken
+## i3ipc-python 1.7.1 broken if it comes to Sway
 
 The bug which crashes i3ipc on Sway has already been fixed by the library developers, but no updated version has been 
 released so far. You need to find a -git package for you Linux distribution - if possible.
