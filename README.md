@@ -25,7 +25,7 @@ Check the [i3ipc folder](https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc
 **If you use a fixed i3ipc library**, uncomment `i3.on("binding", on_window_focus)` 
 in line [#109](https://github.com/nwg-piotr/swayinfo/blob/51d0cf5deaa770c6a6e77fa8f84c2b3880985ad1/wsdnames.py#L109).
 
-**sway config file:**
+**config file:**
 
 Pay attention to the fact, that your workspaces need to be **numbered**, not **named** for the script to work. 
 
@@ -42,3 +42,9 @@ bindsym $mod+1 workspace 1
 ```
 
 in your `~/.config/sway/config` file. See the [example config](https://github.com/nwg-piotr/swayinfo/blob/master/config/sway/config).
+
+### i3 compatibility
+
+The script **should** work well on i3, but for some mysterious reason it works well for me on 2 of my 3 machines.
+On the third one, one event seems to trigger another one, and the program loops. This needs further investigation.
+For now use on i3 at your own risk.
