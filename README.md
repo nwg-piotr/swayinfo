@@ -22,7 +22,7 @@ line #109 is commented out. The bug has already been fixed,
 but the latest release does not yet contain the fix. If possible, you should use the -git version of the package.
 Check the [i3ipc folder](https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc) for more info.
 
-**If you use fixed i3ipc library**, uncomment `i3.on("binding", on_window_focus)` 
+**If you use a fixed i3ipc library**, uncomment `i3.on("binding", on_window_focus)` 
 in line [#109](https://github.com/nwg-piotr/swayinfo/blob/51d0cf5deaa770c6a6e77fa8f84c2b3880985ad1/wsdnames.py#L109).
 
 **i3 / sway config file:**
