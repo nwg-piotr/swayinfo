@@ -3,8 +3,9 @@
 
 """
 Dynamic workspace names for Sway
+THIS VERSION DOES NOT WORK ON SWAY WITH NOT-YET-FIXED i3ipc v1.7.1 MODULE
 
-The script should also work on i3, but for some reason it works well for me on one machine, and loops on another one.
+The script should also work on i3, but for some reason it works well for me on 2 machines, and loops on the 3rd one.
 Use on i3 at your own risk.
 
 Author: Piotr Miller
@@ -12,7 +13,7 @@ e-mail: nwg.piotr@gmail.com
 Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
 
-Depends on: i3ipc-python (python-i3ipc)
+Depends on: i3ipc-python (python-i3ipc) >1.7.1
 """
 
 import i3ipc
@@ -99,14 +100,7 @@ def main():
     i3.on("window::title", on_window_focus)
     i3.on("window::close", on_workspace_focus)
     i3.on("window::new", on_window_new)
-    """
-    The event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
-    To be able to uncomment it (recommended), you need a fixed library version:
-    
-    - use the -git version of the i3ipc-python package, or
-    - see https://github.com/acrisci/i3ipc-python/pull/105 and fix the library locally.
-    """
-    i3.on("binding", on_window_focus)
+    i3.on("binding", on_window_focus)  # This line will crash on Sway with i3ipc<=1.7.1
 
     i3.main()
 
