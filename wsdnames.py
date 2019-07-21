@@ -103,11 +103,10 @@ def main():
     """
     The commented out event below will crash i3ipc on Sway if you use i3ipc-python<=1.7.1. 
     To be able to uncomment it (recommended), you need a fixed library version:
-    
     - use the -git version of the i3ipc-python package;
     - take a look at https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc.
     """
-    # i3.on("binding", on_window_focus)
+    # i3.on("binding", on_window_focus)  # This could (should!) be safely uncommented in i3.
 
     i3.main()
 
