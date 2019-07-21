@@ -105,8 +105,10 @@ def main():
     To be able to uncomment it (recommended), you need a fixed library version:
     - use the -git version of the i3ipc-python package;
     - take a look at https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc.
+    
+    This could (should!) be safely uncommented in i3.
     """
-    # i3.on("binding", on_window_focus)  # This could (should!) be safely uncommented in i3.
+    # i3.on("binding", on_window_focus)
 
     i3.main()
 
