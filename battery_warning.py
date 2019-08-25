@@ -10,7 +10,7 @@ Website: http://nwg.pl
 Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
 
-Dependencies: upower and some notifications (e.g. libnotify + xfce4-notifyd) for notify-send to work
+Dependencies: upower, obhud (AUR)
 """
 
 import sys
@@ -19,7 +19,7 @@ import subprocess
 
 def main():
 
-    low = 20
+    low = 29
     full = 97
 
     # You may override levels given above with arguments: [low <value>] [full <value>]
@@ -40,10 +40,12 @@ def main():
     status = upower()
 
     if status["percentage"] is not None and status["percentage"] <= low and not status["charging"]:
-        notify("Battery low: " + str(status["percentage"]) + "%", status["icon_name"])
+        # notify("Battery low: " + str(status["percentage"]) + "%", status["icon_name"])
+        subprocess.call(['obhud --battery LOW'], shell=True)
 
     elif status["percentage"] is not None and status["percentage"] >= full and status["charging"]:
-        notify("Battery full: " + str(status["percentage"]) + "%", status["icon_name"])
+        # notify("Battery full: " + str(status["percentage"]) + "%", status["icon_name"])
+        subprocess.call(['obhud --battery full'], shell=True)
 
 
 def upower():
