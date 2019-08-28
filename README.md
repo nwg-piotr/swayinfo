@@ -31,12 +31,6 @@ looping on i3. Since all my machines already run v2.0.1, the bug won't be fixed.
 That's why in the old version of the script ([wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)) 
 the line which subscribes to the binding event has been commented out.
 
-**If you use a fixed i3ipc library**, uncomment this line:
-
-```
-# i3.on("binding", on_window_focus)
-```
-
 The bug described above does not affect i3. You may (and should) uncomment the line:
 
 ```
