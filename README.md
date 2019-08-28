@@ -23,6 +23,9 @@ the [wsdnames-i3ipc-2.0.1.py](https://github.com/nwg-piotr/swayinfo/blob/master/
 is all you need. It should work well on both sway and i3. Otherwise you may temporarily use the old 
 [wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py) script.
 
+*NOTE: it's strongly recommended to use i3ipc-python v2.0.1. The old wsdnames.py script contains a bug which may cause
+looping on i3. Since all my machines already run v2.0.1, the bug won't be fixed.*
+
 **i3ipc-python 1.7.1 crashes on the 'binding' event in Sway**
 
 That's why in the old version of the script ([wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)) 
@@ -34,7 +37,11 @@ the line which subscribes to the binding event has been commented out.
 # i3.on("binding", on_window_focus)
 ```
 
-The bug described above does not affect i3. You may (and should) uncomment the mentioned line.
+The bug described above does not affect i3. You may (and should) uncomment the line:
+
+```
+# i3.on("binding", on_window_focus)
+```
 
 **Sway / i3 config file:**
 
