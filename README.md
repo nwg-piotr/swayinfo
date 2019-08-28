@@ -8,29 +8,31 @@ to share, include description in the file header. For them all to work, you need
 - light
 - wmname
 - python-i3ipc
+- python-xlib
 - wget
 
 ## Dynamic workspace names
 
-This script uses the `python-i3ipc` module to dynamically rename workspaces after the currently active window. 
+This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator.
 
-### Sway and i3ipc-python
+### i3ipc-python library version
+
+If you're lucky to use the 2.0.1 version of the library (released 26th August, 2019), 
+the [wsdnames-i3ipc-2.0.1.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames-i3ipc-2.0.1.py) script
+is all you need. It should work well on both sway and i3. Otherwise you may temporarily use the old 
+[wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py) script.
 
 **i3ipc-python 1.7.1 crashes on the 'binding' event in Sway**
 
-That's why in the "stable" version of the script ([wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)) 
-line #109 is commented out. The bug has already been fixed, 
-but the latest release does not yet contain the fix. If possible, you should use the -git version of the package.
-Check the [i3ipc folder](https://github.com/nwg-piotr/swayinfo/tree/master/i3ipc) for more info.
+That's why in the old version of the script ([wsdnames.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)) 
+the line which subscribes to the binding event has been commented out.
 
 **If you use a fixed i3ipc library**, uncomment this line:
 
 ```
 # i3.on("binding", on_window_focus)
 ```
-
-### i3
 
 The bug described above does not affect i3. You may (and should) uncomment the mentioned line.
 
@@ -50,5 +52,5 @@ instead of
 bindsym $mod+1 workspace 1
 ```
 
-in your `~/.config/sway/config` or `~/.config/sway/i3` file. 
+in your `~/.config/sway/config` or `~/.config/i3/config` file. 
 See [example configs](https://github.com/nwg-piotr/swayinfo/tree/master/config).
