@@ -38,7 +38,7 @@ def glyph(ws_number):
 
 # Name the workspace after the focused window name
 def assign_generic_name(i3, e):
-    if not e.change == 'rename':                        # avoid looping in i3
+    if not e.change == 'rename':                        # avoid looping
         try:
             con = i3.get_tree().find_focused()
             print('>>> ', con.type, e.change)
