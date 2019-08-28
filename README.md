@@ -16,7 +16,7 @@ to share, include description in the file header. For them all to work, you need
 This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window name. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator.
 
-### i3ipc-python library version
+### i3ipc-python module version
 
 If you're lucky to use the 2.0.1 version of the library (released 26th August, 2019), 
 the [wsdnames-i3ipc-2.0.1.py](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames-i3ipc-2.0.1.py) script
