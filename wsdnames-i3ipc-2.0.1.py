@@ -2,32 +2,42 @@
 # _*_ coding: utf-8 _*_
 
 """
-Dynamic workspace names for Sway and i3
-THIS VERSION REQUIRES i3ipc >= 2.0.1
+This script uses the i3ipc python library to create dynamic workspace names in Sway / i3
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
 Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
 
-Depends on: python-i3ipc>=2.0.1 (i3ipc-python), python-xlib
+Based on the example from https://github.com/altdesktop/i3ipc-python/blob/master/README.rst
+
+Dependencies: python-i3ipc>=2.0.1 (i3ipc-python), python-xlib
+
+Pay attention to the fact, that your workspaces need to be numbered, not named for the script to work.
+
+Use:
+bindsym $mod+1 workspace number 1
+
+instead of:
+bindsym $mod+1 workspace 1
+
+in your ~/.config/sway/config or ~/.config/i3/config file.
 """
 
 from i3ipc import Connection, Event
 
 # truncate workspace name to this value
-max_width = 30
+max_length = 30
 
 # Create the Connection object that can be used to send commands and subscribe to events.
 i3 = Connection()
 
 
-# A glyph will substitute the WS name if no window active, otherwise it'll be prepended to the window name
-# Add more if you use more than 8 workspaces
+# A glyph will substitute the WS name if no window active, otherwise it'll be prepended before the window name.
+# Glyphs below should look well with the icomoon font installed.
+# Add more glyphs if you use more than 8 workspaces.
 def glyph(ws_number):
-    # glyphs = ["", "", "", "", "", ""]
-    glyphs = ["", "", "", "", "", "", "", ""]
-    # 
+    glyphs = ["", "", "", "", "", "", "", ""]  # redefine according to you taste
     # Or you may use words instead of glyphs:
     # glyphs = ["HOME", "WWW", "FILE", "GAME", "TERM", "PIC", "TXT", "CODE"]
     try:
@@ -38,11 +48,10 @@ def glyph(ws_number):
 
 # Name the workspace after the focused window name
 def assign_generic_name(i3, e):
-    if not e.change == 'rename':                        # avoid looping
+    if not e.change == 'rename':  # avoid looping
         try:
             con = i3.get_tree().find_focused()
-            # print('>>> ', con.type, e.change)
-            if not con.type == 'workspace':             # avoid renaming new empty workspaces on 'binding' event
+            if not con.type == 'workspace':  # avoid renaming new empty workspaces on 'binding' event
                 if not e.change == 'new':
                     # con.type == 'floating_con'        - indicates floating enabled in Sway
                     # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
@@ -58,8 +67,9 @@ def assign_generic_name(i3, e):
                         split_text = ''
 
                     ws_old_name = con.workspace().name
-                    ws_name = "%s: %s\u00a0%s %s " % (con.workspace().num, glyph(con.workspace().num), split_text, con.name)
-                    name = ws_name if len(ws_name) <= max_width else ws_name[:max_width - 1] + "…"
+                    ws_name = "%s: %s\u00a0%s %s " % (
+                        con.workspace().num, glyph(con.workspace().num), split_text, con.name)
+                    name = ws_name if len(ws_name) <= max_length else ws_name[:max_length - 1] + "…"
 
                     i3.command('rename workspace "%s" to %s' % (ws_old_name, name))
                 else:
@@ -73,7 +83,7 @@ def assign_generic_name(i3, e):
                         i3.command('rename workspace "%s" to %s' % (ws_num, name))
 
             else:
-                # Give the workspace a generic name: "number: glyph" (like "1: ")
+                # Give the (empty) workspace a generic name: "number: glyph" (like "1: ")
                 ws_num = con.workspace().num
                 ws_new_name = "%s: %s" % (ws_num, glyph(ws_num))
 
