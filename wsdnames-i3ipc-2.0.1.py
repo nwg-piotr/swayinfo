@@ -57,7 +57,7 @@ def assign_generic_name(i3, e):
                     # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
                     is_floating = con.type == 'floating_con' or con.floating and '_on' in con.floating
 
-                    # Tiling mode or floating indication
+                    # Tiling mode or floating indication. Change symbols if necessary.
                     layout = con.parent.layout
                     if layout == 'splith':
                         split_text = '⇢' if not is_floating else ''
