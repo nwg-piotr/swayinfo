@@ -41,7 +41,7 @@ def assign_generic_name(i3, e):
     if not e.change == 'rename':                        # avoid looping
         try:
             con = i3.get_tree().find_focused()
-            print('>>> ', con.type, e.change)
+            # print('>>> ', con.type, e.change)
             if not con.type == 'workspace':             # avoid renaming new empty workspaces on 'binding' event
                 if not e.change == 'new':
                     # con.type == 'floating_con'        - indicates floating enabled in Sway
