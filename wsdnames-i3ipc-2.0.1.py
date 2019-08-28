@@ -2,7 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 """
-Dynamic workspace names for Sway
+Dynamic workspace names for Sway and i3
 THIS VERSION REQUIRES i3ipc >= 2.0.1
 
 Author: Piotr Miller
