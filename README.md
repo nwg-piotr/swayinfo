@@ -13,7 +13,7 @@ to share, include description in the file header. For them all to work, you need
 
 ## Dynamic workspace names
 
-This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window. 
+This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window name. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator.
 
 ### i3ipc-python library version
