@@ -344,8 +344,7 @@ def main():
         if char == "k":
             if names and xfer_start is not None and xfer_finish is not None:
                 output += c_name if c_name else glyph
-            output += '{:0.2f}'.format((xfer_finish[0] - xfer_start[0]) / 1024) + '/{:0.2f} kB/s'.format(
-                (xfer_finish[1] - xfer_start[1]) / 1024) + separator
+            output += '%08.2f' % ((xfer_finish[0] - xfer_start[0]) / 1024) + '/' + '%08.2f' % ((xfer_finish[1] - xfer_start[1]) / 1024) + ' kB/s' + separator
 
     if testing:
         output += "[" + str(int((round(time.time() * 1000)) - time_start) / 1000) + "s]" + separator
@@ -487,7 +486,7 @@ def net_glyph(home, ul, dl):
     elif dl >= 0.01:
         return " "
     else:
-        return ""
+        return " "
 
 
 def icon_to_use(home, f_name):
