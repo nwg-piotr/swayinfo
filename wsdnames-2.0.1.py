@@ -116,8 +116,9 @@ def assign_generic_name(i3, e):
 def main():
     global auto_tiling
     for i in range(1, len(sys.argv)):
-        if sys.argv[i].upper() == "-AUTO":
+        if sys.argv[i].upper() == "-AUTOTILING":
             auto_tiling = True
+
     # Subscribe to events
     i3.on(Event.WORKSPACE_FOCUS, assign_generic_name)
     i3.on(Event.WINDOW_FOCUS, assign_generic_name)
