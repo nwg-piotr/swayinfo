@@ -66,14 +66,7 @@ def assign_generic_name(i3, e):
                     layout = con.parent.layout
                     
                     if auto_tiling and not is_floating:
-                        height = con.parent.rect.height
-                        width = con.parent.rect.width
-
-                        if height > width:
-                            new_layout = 'splitv'
-                        else:
-                            new_layout = 'splith'
-
+                        new_layout = 'splitv' if con.parent.rect.height > con.parent.rect.width else 'splith'
                         i3.command(new_layout)
                     
                     # Tiling mode or floating indication. Change symbols if necessary.
@@ -83,8 +76,6 @@ def assign_generic_name(i3, e):
                         split_text = '⇣' if not is_floating else ''
                     else:
                         split_text = ''
-
-                    
 
                     ws_old_name = con.workspace().name
                     ws_name = "%s: %s\u00a0%s %s " % (
