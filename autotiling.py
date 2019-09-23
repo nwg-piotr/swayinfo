@@ -2,9 +2,9 @@
 # _*_ coding: utf-8 _*_
 
 """
-This script uses the i3ipc python module to switch the layout/split
-for the currently focused window vertical / horizontal,
-depending on the window dimensions. It works on both sway and i3 window managers.
+This script uses the i3ipc python module to switch the layout splith / splitv
+for the currently focused window, depending on its dimensions.
+It works on both sway and i3 window managers.
 
 Inspired by https://github.com/olemartinorg/i3-alternating-layout
 
