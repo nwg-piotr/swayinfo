@@ -11,7 +11,7 @@ The name is prepended with either tiling mode (horizontal / vertical) or floatin
 
 [![Script in action](https://img.youtube.com/vi/Jh9K3F0O7lM/0.jpg)](https://www.youtube.com/watch?v=Jh9K3F0O7lM)
 
-The script depends on the python i3ipc module **in version >= 2.0.1**. You need to install the package proper for your 
+The script depends on the **python i3ipc module in version >= 2.0.1**. You need to install the package proper for your 
 Linux distribution. In case you installed the library in other way, keep in mind that it also needs the `xlib` module 
 (python-xlib) to work.
 
