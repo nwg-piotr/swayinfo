@@ -41,3 +41,15 @@ by olemartinorg, but uses the `i3ipc` module (see above) instead of `i3-py`, so 
 It switches layout/split for the currently focused window vertical / horizontal, depending on the window dimensions.
 
 [![Auto-tiling in action](https://img.youtube.com/vi/oK-C0kqsdAA/0.jpg)](https://www.youtube.com/watch?v=oK-C0kqsdAA)
+
+## How to use:
+
+Save the script anywhere, make executable and autostart in your i3/sway config file:
+
+`exec /path/to/the/script/script-name.py`
+
+on sway or
+
+`exec --no-startup-id /path/to/the/script/script-name.py`
+
+on i3.
