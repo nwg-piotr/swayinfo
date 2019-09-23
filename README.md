@@ -39,8 +39,9 @@ See [example configs](https://github.com/nwg-piotr/swayinfo/tree/master/config).
 ## [Vertical / horizontal auto-tiling](https://github.com/nwg-piotr/swayinfo/blob/master/autotiling.py)
 
 This script was inspired by [i3 alternating layout script](https://github.com/olemartinorg/i3-alternating-layout) 
-by olemartinorg, but uses the `i3ipc` module (see above) instead of `i3-py`, so works on both i3 and Sway.
-It switches layout/split for the currently focused window vertical / horizontal, depending on the window dimensions.
+by olemartinorg, but uses the `i3ipc` module (see [above](https://github.com/nwg-piotr/swayinfo#i3ipc-python-module)) 
+instead of `i3-py`, so works on both i3 and Sway. It switches layout/split for the currently focused window vertical 
+/ horizontal, depending on the window dimensions.
 
 [![Auto-tiling in action](https://img.youtube.com/vi/oK-C0kqsdAA/0.jpg)](https://www.youtube.com/watch?v=oK-C0kqsdAA)
 
