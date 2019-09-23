@@ -9,7 +9,7 @@ read descriptions inside. All the code was written in python3.
 This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window name. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator. 
 
-[![Script in action](https://img.youtube.com/vi/Jh9K3F0O7lM/0.jpg)](https://www.youtube.com/watch?v=Jh9K3F0O7lM)
+[![Script in action](https://img.youtube.com/vi/UWRZuhn92bQ/0.jpg)](https://www.youtube.com/watch?v=UWRZuhn92bQ)
 
 ### i3ipc-python module
 
