@@ -9,7 +9,7 @@ read descriptions inside. All the code was written in python3.
 This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window name. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator. 
 
-[![Script in action](https://img.youtube.com/vi/UWRZuhn92bQ/0.jpg)](https://www.youtube.com/watch?v=UWRZuhn92bQ)
+[![Script in action](https://img.youtube.com/vi/Jh9K3F0O7lM/0.jpg)](https://www.youtube.com/watch?v=Jh9K3F0O7lM)
 
 ### i3ipc-python module
 
@@ -43,7 +43,7 @@ by olemartinorg, but uses the `i3ipc` module (see [above](https://github.com/nwg
 instead of `i3-py`, so works on both i3 and Sway. It switches layout/split for the currently focused window vertical 
 / horizontal, depending on the window dimensions.
 
-[![Auto-tiling in action](https://img.youtube.com/vi/oK-C0kqsdAA/0.jpg)](https://www.youtube.com/watch?v=oK-C0kqsdAA)
+[![Auto-tiling in action](https://img.youtube.com/vi/UWRZuhn92bQ/0.jpg)](https://www.youtube.com/watch?v=UWRZuhn92bQ)
 
 ## How to use:
 
