@@ -2,18 +2,8 @@
 # _*_ coding: utf-8 _*_
 
 """
-This script uses the i3ipc python module to switch the layout splith / splitv
-for the currently focused window, depending on its dimensions.
-It works on both sway and i3 window managers.
-
-Inspired by https://github.com/olemartinorg/i3-alternating-layout
-
-Author: Piotr Miller
-e-mail: nwg.piotr@gmail.com
-Project: https://github.com/nwg-piotr/swayinfo
-License: GPL3
-
-Dependencies: python-i3ipc>=2.0.1 (i3ipc-python)
+This script has been moved to its own repository: https://github.com/nwg-piotr/autotiling
+and will no longer be updated here.
 """
 
 from i3ipc import Connection, Event
@@ -24,12 +14,18 @@ i3 = Connection()
 def switch_splitting(i3, e):
     try:
         con = i3.get_tree().find_focused()
-        # con.type == 'floating_con'        - indicates floating enabled in Sway
-        # con.floating                      - may be equal 'auto_on' or 'user_on' in i3
-        is_floating = con.type == 'floating_con' or con.floating and '_on' in con.floating
+        if con.floating:                         # We're on i3: on sway it would be None
+            is_floating = '_on' in con.floating  # May be 'auto_on' or 'user_on'
+            is_full_screen = con.fullscreen_mode == 1
+        else:                                    # We are on sway
+            is_floating = con.type == 'floating_con'
+            # On sway on 1st focus the parent container returns 1, then forever the focused container itself
+            is_full_screen = con.fullscreen_mode == 1 or con.parent.fullscreen_mode == 1
 
-        # Let's exclude floating windows
-        if not is_floating:
+        is_tabbed = con.parent.layout == 'tabbed'
+
+        # Let's exclude floating containers, tabbed layouts and full screen mode
+        if not is_floating and not is_tabbed and not is_full_screen:
             new_layout = 'splitv' if con.rect.height > con.rect.width else 'splith'
             i3.command(new_layout)
 
@@ -40,7 +36,6 @@ def switch_splitting(i3, e):
 
 def main():
     i3.on(Event.WINDOW_FOCUS, switch_splitting)
-    i3.on(Event.WINDOW_NEW, switch_splitting)
     i3.main()
 
 

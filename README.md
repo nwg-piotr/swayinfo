@@ -36,23 +36,8 @@ bindsym $mod+1 workspace 1
 in your `~/.config/sway/config` or `~/.config/i3/config` file. 
 See [example configs](https://github.com/nwg-piotr/swayinfo/tree/master/config).
 
-## [Vertical / horizontal auto-tiling](https://github.com/nwg-piotr/swayinfo/blob/master/autotiling.py)
+## Vertical / horizontal auto-tiling
 
-This script was inspired by [i3 alternating layout script](https://github.com/olemartinorg/i3-alternating-layout) 
-by olemartinorg, but uses the `i3ipc` module (see [above](https://github.com/nwg-piotr/swayinfo#i3ipc-python-module)) 
-instead of `i3-py`, so works on both i3 and Sway. It switches layout/split for the currently focused window vertical 
-/ horizontal, depending on the window dimensions.
-
-[![Auto-tiling in action](https://img.youtube.com/vi/UWRZuhn92bQ/0.jpg)](https://www.youtube.com/watch?v=UWRZuhn92bQ)
-
-## How to use:
-
-Save the script anywhere, make executable and autostart in your i3/sway config file:
-
-`exec /path/to/the/script/script-name.py`
-
-on sway or
-
-`exec --no-startup-id /path/to/the/script/script-name.py`
-
-on i3.
+This script has been moved to its own repository: 
+[https://github.com/nwg-piotr/autotiling](https://github.com/nwg-piotr/autotiling),
+and will no longer be updated here.
