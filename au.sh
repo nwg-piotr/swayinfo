@@ -3,10 +3,12 @@
 
 # Just in case - warn if battery level < threshold
 l=$(acpi | awk -F ',' '{print $2}')
-level=${l:1:-1}
-threshold=40
-if [[ "$level" -lt "$threshold" ]]; then
-	echo "Battery level$l, connect AC!"
+if [[ ! -z "$l" ]]; then
+    level=${l:1:-1}
+    threshold=40
+    if [[ "$level" -lt "$threshold" ]]; then
+	    echo "Battery level$l, connect AC!"
+    fi
 fi
 
 trizen -Syu &&
