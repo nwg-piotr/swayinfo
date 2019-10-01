@@ -7,7 +7,7 @@ if [[ ! -z "$l" ]]; then
     level=${l:1:-1}
     threshold=40
     if [[ "$level" -lt "$threshold" ]]; then
-	    echo "Battery level$l, connect AC!"
+	    echo -e "\n*** BATTERY LEVEL$l, CONNECT AC! ***\n"
     fi
 fi
 
