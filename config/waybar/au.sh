@@ -12,4 +12,4 @@ if [[ ! -z "$l" ]]; then
 fi
 
 trizen -Syu &&
-echo Press enter to exit; read; ~/.config/waybar/waybar.sh;
+echo Press enter to exit!; read; swaymsg reload;
