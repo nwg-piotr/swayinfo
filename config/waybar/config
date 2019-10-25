@@ -1,0 +1,57 @@
+[{
+    "layer": "top",
+    "position": "top",
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["custom/myweather"],
+    "modules-right": ["clock", "custom/arch", "tray"],
+    "sway/window": {
+        "max-length": 50
+    },
+    "battery": {
+        "format": "{capacity}% {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "clock": {
+        "interval": 1,
+        "format": "{:%a, %d. %b  %H:%M:%S}"
+    },
+    "tray": {
+	    "icon-size": 21,
+	    "spacing": 10
+	},
+	"custom/myweather": {
+        "interval": 1800,
+        "return-type": "text",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/weather.py -Icdt",
+        "escape": true
+    },
+    "custom/arch": {
+        "interval": 60,
+        "return-type": "json",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/config/waybar/modules/arch-update.py",
+        "on-click": "alacritty -e \"/home/piotr/PycharmProjects/swayinfo/au.sh\"",
+        "escape": true
+    }
+}, {
+    "layer": "top",
+    "position": "bottom",
+    "modules-left": ["sway/window"],
+    "modules-center": ["custom/audacious"],
+    "modules-right": ["custom/swayinfo"],
+    "sway/window": {
+        "max-length": 50
+    },
+    "custom/swayinfo": {
+        "interval": 1,
+        "return-type": "text",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CgaMfNu -N -W0",
+        "escape": true
+    },
+    "custom/audacious": {
+        "interval": 1,
+        "return-type": "json",
+        "exec": "~/.config/waybar/modules/audacious.sh",
+        "exec-if": "pgrep audacious",
+        "escape": true
+    }
+}]
