@@ -1,57 +1,120 @@
 [{
+    // PRIMARY TOP
+    "output": "eDP-1",
     "layer": "top",
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["custom/myweather"],
-    "modules-right": ["clock", "custom/arch", "tray"],
+    "modules-center": ["custom/myweather", "custom/battery-warning"],
+    "modules-right": ["custom/arch", "custom/scratchpad", "clock", "backlight", "pulseaudio", "battery", "tray"],
     "sway/window": {
         "max-length": 50
     },
     "battery": {
-        "format": "{capacity}% {icon}",
-        "format-icons": ["", "", "", "", ""]
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "custom/battery-warning": {
+    "interval": 5,
+    "exec": "/home/piotr/PycharmProjects/swayinfo/battery_warning.py"
     },
     "clock": {
         "interval": 1,
-        "format": "{:%a, %d. %b  %H:%M:%S}"
+        "format": "{:%a, %d. %b  %H:%M:%S}",
+        "tooltip": false
     },
     "tray": {
 	    "icon-size": 21,
 	    "spacing": 10
 	},
+	"custom/arch": {
+        "interval": 1800,
+        "return-type": "json",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/config/waybar/modules/arch-update.py",
+        "on-click": "alacritty -t \"Arch-update\" -e \"/home/piotr/PycharmProjects/swayinfo/config/waybar/au.sh\"",
+        "escape": true
+    },
+    "custom/scratchpad": {
+        "interval": 1,
+        "return-type": "json",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/config/waybar/modules/scratchpad.py",
+        "on-click": "swaymsg scratchpad show",
+        "escape": true
+    },
 	"custom/myweather": {
         "interval": 1800,
         "return-type": "text",
-        "exec": "/home/piotr/PycharmProjects/swayinfo/weather.py -Icdt",
-        "escape": true
+        "exec": "/home/piotr/PycharmProjects/swayinfo/weather.py -Idt",
+        "on-click": "/home/piotr/PycharmProjects/swayinfo/weather.py -D",
+        "escape": true,
+        "tooltip": false
     },
-    "custom/arch": {
-        "interval": 60,
-        "return-type": "json",
-        "exec": "/home/piotr/PycharmProjects/swayinfo/config/waybar/modules/arch-update.py",
-        "on-click": "alacritty -e \"/home/piotr/PycharmProjects/swayinfo/au.sh\"",
-        "escape": true
-    }
+    "backlight": {
+		"device": "intel_backlight",
+		"format": "{icon} {percent}%",
+		"format-icons": ["", "", "", "", ""],
+		"on-scroll-up": "light -A 1",
+		"on-scroll-down": "light -U 1"
+	},
+	"pulseaudio": {
+		"format": "{icon} {volume}%",
+		"format-bluetooth": "{volume}% {icon}",
+		"format-muted": "",
+		"format-icons": {
+		    "headphones": "",
+		    "handsfree": "",
+		    "headset": "",
+		    "phone": "",
+		    "portable": "",
+		    "car": "",
+		    "default": ["", "", ""]
+		},
+		"scroll-step": 1,
+		"on-click-right": "pavucontrol",
+		"on-click": "pamixer -t"
+	}
 }, {
+    // PRIMARY BOTTOM
+    "output": "eDP-1",
     "layer": "top",
     "position": "bottom",
-    "modules-left": ["sway/window"],
-    "modules-center": ["custom/audacious"],
-    "modules-right": ["custom/swayinfo"],
+    "name": "waybar-bottom",
+    "modules-left": ["custom/netinfo"],
+    "modules-center": ["custom/audaciuos"],
+    "modules-right": ["custom/bbswitch", "custom/swayinfo"],
     "sway/window": {
         "max-length": 50
     },
     "custom/swayinfo": {
-        "interval": 1,
+        "interval": 3,
         "return-type": "text",
-        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CgaMfNu -N -W0",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CgaMtfNu -N -W0",
         "escape": true
     },
-    "custom/audacious": {
+    "custom/netinfo": {
+        "interval": 1,
+        "return-type": "text",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -Ck -N",
+        "escape": true
+    },
+    "custom/bbswitch": {
+        "interval": 1,
+        "return-type": "text",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/bbswitch",
+        "escape": true
+    },
+    "custom/audaciuos": {
         "interval": 1,
         "return-type": "json",
         "exec": "~/.config/waybar/modules/audacious.sh",
         "exec-if": "pgrep audacious",
         "escape": true
     }
+},
+{
+    // SECONDARY TOP
+    "output": "HDMI-A-1",
+    "layer": "top",
+    "position": "top",
+    "modules-left": ["sway/workspaces", "sway/mode"]
+
 }]
