@@ -13,6 +13,6 @@ except:
 
 updates = ''
 if len(pacman) > 0 or len(aur) > 0:
-    updates += ' {}/{}'.format(len(pacman), len(aur))
+    updates += ' {}/{}'.format(len(pacman), len(aur))
 
 print('{"text":"%s"}' % (updates))
