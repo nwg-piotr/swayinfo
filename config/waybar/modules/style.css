@@ -8,17 +8,17 @@
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0.5);
-    border-bottom: 2px solid rgba(100, 114, 125, 0.5);
-    color: #ffffff;
+    background-color: #19151a;
+    border-bottom: 2px solid #475845;
+    color: #eee;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
 window#waybar.waybar-bottom {
-    background-color: rgba(43, 48, 59, 0.5);
+    background-color: #19151a;
     border-bottom: 0px;
-    color: #ffffff;
+    color: #b47474;
     transition-property: background-color;
     transition-duration: .5s;
 }
@@ -49,19 +49,19 @@ window#waybar.chromium {
     padding: 0 5px;
     background-color: transparent;
     color: #ffffff;
-    border-bottom: 3px solid transparent;
+    border-bottom: 1px solid transparent;
 }
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
 #workspaces button:hover {
     background: rgba(0, 0, 0, 0.2);
     box-shadow: inherit;
-    border-bottom: 3px solid #ffffff;
+    border-bottom: 1px solid #c5933a;
 }
 
 #workspaces button.focused {
-    background-color: #64727D;
-    border-bottom: 3px solid #eeeeee;
+    background-color: #5f6b5c;
+    border-bottom: 1px solid transparent;
 }
 
 #workspaces button.urgent {
@@ -70,13 +70,16 @@ window#waybar.chromium {
 
 #mode {
     background-color: #64727D;
-    border-bottom: 3px solid #ffffff;
+    border-bottom: 1px solid #ccc;
 }
 
 #custom-swayinfo,
 #custom-netinfo,
 #custom-arch,
 #custom-scratchpad,
+#custom-cpu,
+#custom-bbswitch,
+#custom-playerctl,
 #clock,
 #battery,
 #cpu,
@@ -92,7 +95,7 @@ window#waybar.chromium {
 #mpd {
     padding: 0 2px;
     margin: 0 2px;
-    color: #ffffff;
+    color: #eee;
 }
 
 #custom-myweather {
@@ -101,17 +104,17 @@ window#waybar.chromium {
 }
 
 #clock {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+	background-color: #5f6b5c;
+	padding: 0 10px 0 10px;
 }
 
 #battery {
     background-color: rgba(0, 0, 0, 0);
-    color: #ffffff;
+    color: #eee;
 }
 
 #battery.charging {
-    color: #00eeff;
-    background-color: rgba(0, 0, 0, 0);
+    border-bottom: 3px solid #c5933a;
 }
 
 @keyframes blink {
@@ -178,6 +181,14 @@ label:focus {
 
 #custom-media.custom-vlc {
     background-color: #ffa000;
+}
+
+#custom-playerctl.paused {
+    color: #666;
+}
+
+#custom-playerctl.stopped {
+    color: #666;
 }
 
 #temperature {

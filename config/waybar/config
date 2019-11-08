@@ -11,7 +11,9 @@
     },
     "battery": {
         "format": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": ["", "", "", "", ""],
+        "on-click": "b=$(acpi -b) && notify-send \"$b\" --expire-time=3000",
+        "tooltip": false
     },
     "custom/battery-warning": {
     "interval": 5,
@@ -79,34 +81,45 @@
     "position": "bottom",
     "name": "waybar-bottom",
     "modules-left": ["custom/netinfo"],
-    "modules-center": ["custom/audaciuos"],
-    "modules-right": ["custom/bbswitch", "custom/swayinfo"],
+    "modules-center": ["custom/playerctl"],
+    "modules-right": ["custom/cpu", "custom/bbswitch", "custom/swayinfo"],
     "sway/window": {
         "max-length": 50
     },
-    "custom/swayinfo": {
+    "custom/cpu": {
         "interval": 3,
         "return-type": "text",
-        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CgaMtfNu -N -W0",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -Cga",
+        "escape": true
+    },
+    "custom/swayinfo": {
+        "interval": 5,
+        "return-type": "text",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CtMfNu -N -W0",
         "escape": true
     },
     "custom/netinfo": {
-        "interval": 1,
+        "interval": 3,
         "return-type": "text",
         "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -Ck -N",
+        "tooltip": false,
         "escape": true
     },
     "custom/bbswitch": {
-        "interval": 1,
+        "interval": 5,
         "return-type": "text",
         "exec": "/home/piotr/PycharmProjects/swayinfo/bbswitch",
         "escape": true
     },
-    "custom/audaciuos": {
+    "custom/playerctl": {
         "interval": 1,
         "return-type": "json",
-        "exec": "~/.config/waybar/modules/audacious.sh",
-        "exec-if": "pgrep audacious",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/config/waybar/modules/playerctl.sh",
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl stop",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "max-length": 60,
         "escape": true
     }
 },
