@@ -3,8 +3,13 @@
 
 import subprocess
 
-pacman = subprocess.check_output("checkupdates", shell=True).decode("utf-8").splitlines()
-# trizen returns exit code 1 if no updates found
+# checkupdates returns exit code 1 if no updates found
+pacman = []
+try:
+    pacman = subprocess.check_output("checkupdates", shell=True).decode("utf-8").splitlines()
+except:
+    pass
+
 aur = []
 try:
     aur = subprocess.check_output("trizen -Qqu -a", shell=True).decode("utf-8").splitlines()
