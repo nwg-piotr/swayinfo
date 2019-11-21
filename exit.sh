@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# A rofi-like System/Exit menu for wofi
+
 # wofi crashes w/ no cache file, so let's use a custom one and delete it every time, to avoid reordering entries
 rm /home/piotr/.local/share/wofi/exit.cache
 
@@ -10,7 +12,7 @@ A=$(wofi --show dmenu --width=100 --height=110 --cache-file=/home/piotr/.local/s
  Shutdown
 EOF
 )
-    
+
 case "$A" in
     *Lock) swaylock -f -c 000000 ;;
     *Logout) swaynag -t warning -m 'Do you really want to exit sway?' -b 'Exit sway' 'swaymsg exit' ;;
