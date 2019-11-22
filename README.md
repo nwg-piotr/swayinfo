@@ -4,12 +4,14 @@ enough to share, and those are [Dynamic workspace names](https://github.com/nwg-
 and [Auto-tiling](https://github.com/nwg-piotr/swayinfo/blob/master/autotiling.py). If it comes to the rest - please
 read descriptions inside. All the code was written in python3.
 
-## [Dynamic workspace names](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames-i3ipc-2.0.1.py)
+## [Dynamic workspace names](https://github.com/nwg-piotr/swayinfo/blob/master/wsdnames.py)
 
 This script uses the python `i3ipc` module to dynamically rename workspaces after the currently active window name. 
 The name is prepended with either tiling mode (horizontal / vertical) or floating indicator. 
 
 [![Script in action](https://img.youtube.com/vi/Jh9K3F0O7lM/0.jpg)](https://www.youtube.com/watch?v=Jh9K3F0O7lM)
+
+It may be a good idea to run the script with `exec_always` and the `wsdnames.sh` launcher.
 
 ### i3ipc-python module
 
