@@ -31,11 +31,11 @@ def main():
             except ValueError:
                 pass
 
-        if a == 'full':
+        """if a == 'full':
             try:
                 full = int(sys.argv[i + 1])
             except ValueError:
-                pass
+                pass"""
 
     status = upower()
 
@@ -43,9 +43,9 @@ def main():
         # notify("Battery low: " + str(status["percentage"]) + "%", status["icon_name"])
         subprocess.call(['obhud --battery LOW'], shell=True)
 
-    elif status["percentage"] is not None and status["percentage"] >= full and status["charging"]:
+    """elif status["percentage"] is not None and status["percentage"] >= full and status["charging"]:
         # notify("Battery full: " + str(status["percentage"]) + "%", status["icon_name"])
-        subprocess.call(['obhud --battery full'], shell=True)
+        subprocess.call(['obhud --battery full'], shell=True)"""
 
 
 def upower():
