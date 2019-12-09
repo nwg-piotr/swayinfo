@@ -2,25 +2,28 @@
 # Most of bindings come from the ArchLabs i3 config file
 # Read `man 5 sway` for a complete reference.
 
-exec xrdb -load ~/.Xresources
+exec_always xrdb -load ~/.Xresources
+xwayland enable
 
 # border & title.. Must be set to border pixel for gaps to work
-for_window [title="^.*"] border pixel 2, title_format "%class >> %title"
+	for_window [title="^.*"] border pixel 1, title_format "%class >> %title"
+
+# class                 border   backgr.  text    indicator child_border
+
+client.focused          #939483  #939483  #ffffff #b68b5f   #939483
+client.focused_inactive #445767  #445767  #888888 #6c6e70   #445767
+client.unfocused        #1b2423  #1b2423  #888888 #474d51   #1b2423
+client.urgent           #2f343a  #900000  #ffffff #900000   #2f343a
+client.background       #ffffff
 
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
-set $mod Mod4
+	set $mod Mod4
 
-set $gnome-schema org.gnome.desktop.interface
-
-### Theme settings
-# To check current theme settings: gsettings get org.gnome.desktop.interface gtk-theme
-	exec_always {
-		gsettings set $gnome-schema gtk-theme 'Numix-Frost'
-		gsettings set $gnome-schema icon-theme 'Papirus'
-		gsettings set $gnome-schema cursor-theme 'Adwaita'
-	}
+# monitors
+	set $Mon1 eDP-1
+	set $Mon2 HDMI-A-1
 
 # Home row direction keys
 	set $up l
@@ -28,9 +31,20 @@ set $gnome-schema org.gnome.desktop.interface
 	set $left j
 	set $right semicolon
 
-# monitors
-	set $Mon1 eDP-1
-	set $Mon2 HDMI-A-1
+# Preferred applications
+	set $term alacritty
+	set $editor mousepad
+	set $browser chromium
+	set $filemanager caja
+
+### Theme settings
+set $gnome-schema org.gnome.desktop.interface
+
+# To check current theme settings: gsettings get org.gnome.desktop.interface gtk-theme
+	exec_always /home/piotr/.local/bin/import-gsettings \
+		gtk-theme:gtk-theme-name \
+		icon-theme:gtk-icon-theme-name \
+		cursor-theme:gtk-cursor-theme-name
 
 # gaps
 	gaps inner 5
@@ -42,57 +56,48 @@ set $gnome-schema org.gnome.desktop.interface
 #
 # Autostart
 #
-	# exec nm-applet (does not work, fucker)
+	# Peripherals
+		exec light -S 20
+		exec amixer sset 'Master' 40%
+		exec obhud --touchpad off -c sway.conf
+
+	# exec nm-applet (still does not work on sway)
+
+	# Notifications
+		exec mako --icons 1 --markup 1 --actions 1 --padding 10 --background-color "#6a86a3" --default-timeout 10000
 
 	# Dynamic workspace names
-	exec_always /home/piotr/PycharmProjects/swayinfo/wsdnames.sh
+		exec_always /home/piotr/PycharmProjects/swayinfo/wsdnames.sh
 
-	# Auto tiling
-	exec autotiling
+	# Autotiling
+		exec autotiling
 
-	# To run java swing(broken) applications (e.g. IntelliJ)
-	exec wmname LG3D
+	# Workaround to run Java swing (broken) applications (e.g. IntelliJ)
+		exec wmname LG3D
 
-	exec light -S 20
-	exec amixer sset 'Master' 40%
-	#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-	exec lxpolkit
-	exec gnome-keyring-daemon --start -bindsym-components=pkcs11
+	# Authentication
+		exec lxpolkit
+		exec gnome-keyring-daemon --start -bindsym-components=pkcs11
 
-	exec obhud --touchpad off -c sway.conf
-
-	# exec /usr/bin/MellowPlayer
-
-# Preferred applications
-	set $term alacritty
-	set $editor mousepad
-	set $browser chromium
-	set $filemanager caja
+	# Restore wallpaper
+		exec ~/.azotebg
 
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
-	# set $menu dmenu_path | dmenu | xargs swaymsg exec
-	# set $menu j4-dmenu-desktop --dmenu='bemenu -i --nb "#3f3f3f" --nf "#dcdccc" --fn "pango:DejaVu Sans Mono 12"' --term='alacritty'
-	set $menu dmenu-wl_run -i -h 30
-
-xwayland enable
+	set $menu wofi --show run | xargs swaymsg exec
+	set $drun wofi -i --show drun | xargs swaymsg exec
 
 #
 # Output configuration:
-#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
 	output eDP-1 resolution 1920x1080 position 0,0
 	output HDMI-A-1 resolution 1920x1080 position 1920,0
-	# output HDMI-A-1 disable
 
-	set $laptop eDP-1
-	bindswitch lid:on output $laptop disable
-	bindswitch lid:off output $laptop enable
-
-	#output * bg /home/piotr/Obrazy/Wallpapers/wallhaven-zmoxry.jpg fill
-	exec ~/.azotebg
-
-#
-# You can get the names of your outputs by running: swaymsg -t get_outputs
+	# Turn off screen on lid closed
+		set $laptop eDP-1
+		bindswitch lid:on output $laptop disable
+		bindswitch lid:off output $laptop enable
 
 ### Idle configuration
 exec swayidle -w \
@@ -101,120 +106,102 @@ exec swayidle -w \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 #
-# This will lock your screen after 600 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
+# This will lock your screen after 3000 seconds of inactivity, then turn off
+# your displays after another 3300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
 
 ### Input configuration
-#
-# Example configuration:
-#
-#   input "2:14:SynPS/2_Synaptics_TouchPad" {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
 # Mouse:
-    input "3727:168:DaKai_2.4G_RX_Mouse" {
+  input "3727:168:DaKai_2.4G_RX_Mouse" {
 		accel_profile flat
-    }
+  }
 
-	# keyboard layout
+# keyboard layout
 	input * xkb_layout "pl"
 
-	# numlock on
+# numlock on
 	input * xkb_numlock enabled
 
 ### Key bindings
 #
 # Basics:
 #
-    # start a terminal
+  # Terminal
     bindsym $mod+Return exec $term
     bindsym $mod+t exec $term
 
     bindsym $mod+g exec gimp
 
-    # start text editor
+  # Text editor
     bindsym $mod+e exec $editor
 
-    # start web browser
+  # Web browser
     bindsym $mod+w exec $browser
 
-    # start wallpaper manager
+  # Wallpaper manager
     bindsym $mod+c exec azote
 
     bindsym mod1+c exec ~/PycharmProjects/swayinfo/cheatsheet sway
 
-    # start file manager
+  # start file manager
     bindsym $mod+f exec $filemanager
 
-    # kill focused window
+  # kill focused window
     bindsym $mod+Shift+q kill
     bindsym mod1+q kill
 
-    # start your launcher
+  # start your launcher
     bindsym $mod+d exec $menu
 
-# launchers
-    bindsym Control+space exec rofr.sh -r
+	# launchers
+    bindsym Control+space exec $drun
+    bindsym mod1+F1 exec $drun
 
-# this is needed for super key to launch rofi
-    bindsym mod1+F1 exec rofr.sh -r
-
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
+	# Drag floating windows by holding down $mod and left mouse button.
+	# Resize them with right mouse button + $mod.
+	# Despite the name, also works for non-floating windows.
+	# Change normal to inverse to use left mouse button for resizing and right
+	# mouse button for dragging.
     floating_modifier $mod normal
 
-    # reload the configuration file
+	# reload the configuration file
     bindsym $mod+Shift+c reload
 
-# logout script
-    bindsym $mod+x exec rofr.sh -l
+	# logout script
+    bindsym $mod+x exec /home/piotr/.local/bin/wofi-exit.sh
 
-# audio
-	bindsym XF86AudioPlay exec playerctl play-pause
-	bindsym XF86AudioNext exec playerctl next
-	bindsym XF86AudioPrev exec playerctl previous
-	bindsym XF86AudioStop exec playerctl stop
-	#bindsym XF86AudioRaiseVolume exec pamixer -i 2
-	#bindsym XF86AudioLowerVolume exec pamixer -d 2
-	#bindsym XF86AudioMute exec pamixer -t
+	# audio
+		bindsym XF86AudioRaiseVolume exec obhud --volume up
+		bindsym XF86AudioLowerVolume exec obhud --volume down
+		bindsym XF86AudioMute exec obhud --volume toggle
 
-	bindsym XF86AudioRaiseVolume exec obhud --volume up
-	bindsym XF86AudioLowerVolume exec obhud --volume down
-	bindsym XF86AudioMute exec obhud --volume toggle
+	# touchpad
+		bindsym XF86TouchpadToggle exec obhud --touchpad toggle -c sway.conf
 
-# touchpad
-	bindsym XF86TouchpadToggle exec obhud --touchpad toggle -c sway.conf
+	# backlight
+		bindsym XF86MonBrightnessUp exec light -A 5
+		bindsym XF86MonBrightnessDown exec light -U 5
 
-# backlight
-	bindsym XF86MonBrightnessUp exec light -A 5
-	bindsym XF86MonBrightnessDown exec light -U 5
-
-# Borders
+	# Borders
     default_border normal
     default_floating_border normal
-    hide_edge_borders both
+    hide_edge_borders none
     popup_during_fullscreen smart
 
 	# changing border style
-	bindsym $mod+n border normal
-	bindsym $mod+u border none
+		bindsym $mod+n border normal
+		bindsym $mod+u border none
 
     bindsym $mod+Shift+b border toggle
     bindsym mod1+Shift+f fullscreen toggle
 
-    # exit sway (logs you out of your Wayland session)
+  # exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
 #
 # Change gaps
 #
@@ -226,23 +213,23 @@ exec swayidle -w \
 #
 # Moving around:
 #
-    # Move your focus around
+  # Move your focus around
     bindsym $mod+$left focus left
     bindsym $mod+$down focus down
     bindsym $mod+$up focus up
     bindsym $mod+$right focus right
-    # or use $mod+[up|down|left|right]
+  # or use $mod+[up|down|left|right]
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
 
-    # _move_ the focused window with the same, but add Shift
+  # _move_ the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
     bindsym $mod+Shift+$up move up
     bindsym $mod+Shift+$right move right
-    # ditto, with arrow keys
+  # ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
@@ -250,7 +237,7 @@ exec swayidle -w \
 #
 # Workspaces:
 #
-    # workspace assignment
+  # workspace assignment
     workspace 1 output $Mon1
     workspace 2 output $Mon1
     workspace 3 output $Mon1
@@ -261,63 +248,62 @@ exec swayidle -w \
     workspace 8 output $Mon2
 
 	# switch to workspace
-	bindsym $mod+1 workspace number 1
-	bindsym $mod+2 workspace number 2
-	bindsym $mod+3 workspace number 3
-	bindsym $mod+4 workspace number 4
-	bindsym $mod+5 workspace number 5
-	bindsym $mod+6 workspace number 6
-	bindsym $mod+7 workspace number 7
-	bindsym $mod+8 workspace number 8
+		bindsym $mod+1 workspace number 1
+		bindsym $mod+2 workspace number 2
+		bindsym $mod+3 workspace number 3
+		bindsym $mod+4 workspace number 4
+		bindsym $mod+5 workspace number 5
+		bindsym $mod+6 workspace number 6
+		bindsym $mod+7 workspace number 7
+		bindsym $mod+8 workspace number 8
 
 	# move focused container to workspace
-	bindsym $mod+Shift+1 move container to workspace number 1; workspace number 1
-	bindsym $mod+Shift+2 move container to workspace number 2; workspace number 2
-	bindsym $mod+Shift+3 move container to workspace number 3; workspace number 3
-	bindsym $mod+Shift+4 move container to workspace number 4; workspace number 4
-	bindsym $mod+Shift+5 move container to workspace number 5; workspace number 5
-	bindsym $mod+Shift+6 move container to workspace number 6; workspace number 6
-	bindsym $mod+Shift+7 move container to workspace number 7; workspace number 7
-	bindsym $mod+Shift+8 move container to workspace number 8; workspace number 8
+		bindsym $mod+Shift+1 move container to workspace number 1; workspace number 1
+		bindsym $mod+Shift+2 move container to workspace number 2; workspace number 2
+		bindsym $mod+Shift+3 move container to workspace number 3; workspace number 3
+		bindsym $mod+Shift+4 move container to workspace number 4; workspace number 4
+		bindsym $mod+Shift+5 move container to workspace number 5; workspace number 5
+		bindsym $mod+Shift+6 move container to workspace number 6; workspace number 6
+		bindsym $mod+Shift+7 move container to workspace number 7; workspace number 7
+		bindsym $mod+Shift+8 move container to workspace number 8; workspace number 8
 
 #
 # Layout stuff:
 #
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
+  # You can "split" the current object of your focus with
+  # $mod+b or $mod+v, for horizontal and vertical splits
+  # respectively.
     bindsym $mod+h splith
     bindsym $mod+v splitv
 
-    # Switch the current container between different layout styles
+  # Switch the current container between different layout styles
     bindsym $mod+Shift+t layout tabbed
     bindsym $mod+Shift+s layout stacking
-    #bindsym $mod+Tab layout toggle split
     bindsym mod1+Tab layout toggle tabbed split
-	bindsym $mod+Tab layout toggle splitv splith
+		bindsym $mod+Tab layout toggle splitv splith
 
-    # Make the current focus fullscreen
+  # Make the current focus fullscreen
     bindsym $mod+Shift+f fullscreen
 
-    # Toggle the current focus between tiling and floating mode
+  # Toggle the current focus between tiling and floating mode
     bindsym $mod+Shift+space floating toggle
 
-    # Swap focus between the tiling area and the floating area
+  # Swap focus between the tiling area and the floating area
     bindsym $mod+space focus mode_toggle
 
-    # move focus to the parent container
+  # move focus to the parent container
     bindsym $mod+a focus parent
 #
 # Scratchpad:
 #
-    # Sway has a "scratchpad", which is a bag of holding for windows.
-    # You can send windows there and get them back later.
+  # Sway has a "scratchpad", which is a bag of holding for windows.
+  # You can send windows there and get them back later.
 
-    # Move the currently focused window to the scratchpad
+  # Move the currently focused window to the scratchpad
     bindsym $mod+Shift+z move scratchpad
 
-    # Show the next scratchpad window or hide the focused scratchpad window.
-    # If there are multiple scratchpad windows, this command cycles through them.
+  # Show the next scratchpad window or hide the focused scratchpad window.
+  # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+z scratchpad show
 #
 # Resizing containers:
@@ -351,6 +337,7 @@ exec swayidle -w \
 	for_window [class="(?i)(?:tilix|thunar|alacritty)"] focus
 	for_window [class="(?i)(?:MellowPlayer)"] move scratchpad
 	for_window [class="(?i)(?:mousepad|Chromium|tint2conf)"] focus
+	for_window [class="(?i)(?:google-chrome)"] border none
 
 	# Assign Applications to specific workspace
 	# get class with xprop
@@ -373,12 +360,11 @@ exec swayidle -w \
 	for_window [class="(?i)(?:codeblocks|tilix|alacritty|jetbrains*)"] focus
 	for_window [title="Update*|Confirm*|Preferencje*|Sterowanie g*|Calendar*|pamac*"] floating enable
 	for_window [title="galculator*"] floating enable
-	for_window [title="Azote w*"] floating enable, focus
+	for_window [title="Azote~"] floating enable, focus
 	for_window [title="Cheatsheet*"] floating enable, focus
 	for_window [title="feh*"] floating enable, focus
 	for_window [title="gThumb|Arch-update"] floating enable, focus
 	for_window [class="Chromium*"] floating disable, border none
-	for_window [title="xfce4-*"] border none
 
 #
 # Status Bar(s):
@@ -389,15 +375,6 @@ bar {
 	swaybar_command waybar
 }
 
-# /etc/sway/config.d/swayshot file uses `Mod1` variable instead of `mod1`
-# Let's comment it out and substitute below
-# include /etc/sway/config.d/*
-
 bindsym Print exec sleep 5 && /home/piotr/.local/bin/screenshot fullscreen
 bindsym Control+Print exec sleep 5 && /home/piotr/.local/bin/screenshot display
 bindsym Shift+Control+Print exec sleep 5 && /home/piotr/.local/bin/screenshot region
-
-client.focused #949384 #949384 #ffffff #dddddd #949384
-client.focused_inactive #333333 #333333 #888888 #292d2e #333333
-client.unfocused #333333 #333333 #888888 #292d2e #333333
-client.urgent #2f343a #900000 #ffffff #900000 #2f343a
