@@ -12,4 +12,4 @@ if [[ ! -z "$l" ]]; then
 fi
 
 trizen -Syu &&
-echo Press enter to exit; read; py3-cmd refresh arch_updates;
+echo Press enter to exit!; read; swaymsg reload;
