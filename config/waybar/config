@@ -32,7 +32,7 @@
         "interval": 1800,
         "return-type": "json",
         "exec": "/home/piotr/PycharmProjects/swayinfo/config/waybar/modules/arch-update.py",
-        "on-click": "alacritty -t \"Arch-update\" -e \"/home/piotr/PycharmProjects/swayinfo/config/waybar/au.sh\"",
+        "on-click": "alacritty -t \"Arch-update\" -e \"/home/piotr/PycharmProjects/swayinfo/au.sh\"",
         "escape": true
     },
     "custom/scratchpad": {
