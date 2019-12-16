@@ -1,12 +1,12 @@
-font=DejaVu Sans Mono 10
+font=DejaVu Sans Mono 11
 edge=top
 [red]
-background=660000
+background=669900
 button-border-size=0
 button-padding=3
 button-gap=10
 border-bottom-size=0
 border=CC6600
-text=FFFFFF
-button-background=1b202a
+text=eeeeee
+button-background=81a1c1
 message-padding=4

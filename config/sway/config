@@ -10,9 +10,9 @@ xwayland enable
 
 # class                 border   backgr.  text    indicator child_border
 
-client.focused          #939483  #939483  #ffffff #b68b5f   #939483
+client.focused          #94a8a7  #94a8a7  #ffffff #cf7479   #94a8a7
 client.focused_inactive #445767  #445767  #888888 #6c6e70   #445767
-client.unfocused        #1b2423  #1b2423  #888888 #474d51   #1b2423
+client.unfocused        #2e3440  #2e3440  #888888 #474d51   #2e3440
 client.urgent           #2f343a  #900000  #ffffff #900000   #2f343a
 client.background       #ffffff
 
@@ -60,11 +60,12 @@ set $gnome-schema org.gnome.desktop.interface
 		exec light -S 20
 		exec amixer sset 'Master' 40%
 		exec obhud --touchpad off -c sway.conf
+		exec redshift
 
-	# exec nm-applet (still does not work on sway)
+	  # exec nm-applet
 
 	# Notifications
-		exec mako --icons 1 --markup 1 --actions 1 --padding 10 --background-color "#6a86a3" --default-timeout 10000
+		exec mako --icons 1 --markup 1 --actions 1 --padding 10 --background-color "#81a1c1" --default-timeout 10000
 
 	# Dynamic workspace names
 		exec_always /home/piotr/PycharmProjects/swayinfo/wsdnames.sh
@@ -331,11 +332,37 @@ exec swayidle -w \
 	bindsym $mod+r mode "resize"
 
 #
+# swaynagmode [AUR] adds keyboard support to swaynag
+#
+	set $nag exec swaynagmode
+	mode "nag" {
+		bindsym {
+		  Ctrl+d    mode "default"
+
+		  Ctrl+c    $nag --exit
+		  q         $nag --exit
+		  Escape    $nag --exit
+
+		  Return    $nag --confirm
+
+		  Tab       $nag --select prev
+		  Shift+Tab $nag --select next
+
+		  Left      $nag --select next
+		  Right     $nag --select prev
+
+		  Up        $nag --select next
+		  Down      $nag --select prev
+		}
+	}
+
+#
 # application settings
 #
 	for_window [class="(?i)(?:Steam|pavucontrol)"] floating enable, focus
 	for_window [class="(?i)(?:tilix|thunar|alacritty)"] focus
-	for_window [class="(?i)(?:MellowPlayer)"] move scratchpad
+	# for_window [class="(?i)(?:MellowPlayer)"] move scratchpad
+	for_window [title="MellowPlayer"] move scratchpad
 	for_window [class="(?i)(?:mousepad|Chromium|tint2conf)"] focus
 	for_window [class="(?i)(?:google-chrome)"] border none
 

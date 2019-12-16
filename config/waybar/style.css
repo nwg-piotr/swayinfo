@@ -8,15 +8,15 @@
 }
 
 window#waybar {
-    background-color: #19151a;
-    border-bottom: 2px solid #475845;
+    background-color: #151515;
+    border-bottom: 2px solid #26252a;
     color: #eee;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
 window#waybar.waybar-bottom {
-    background-color: #19151a;
+    background-color: #151515;
     border-bottom: 0px;
     color: #b47474;
     transition-property: background-color;
@@ -56,11 +56,11 @@ window#waybar.chromium {
 #workspaces button:hover {
     background: rgba(0, 0, 0, 0.2);
     box-shadow: inherit;
-    border-bottom: 1px solid #c5933a;
+    border-bottom: 1px solid #81a1c1;
 }
 
 #workspaces button.focused {
-    background-color: #5f6b5c;
+    background-color: #81a1c1;
     border-bottom: 1px solid transparent;
 }
 
@@ -103,9 +103,16 @@ window#waybar.chromium {
 	font-size: 15px;
 }
 
+#custom-arch {
+	font-family: "DejaVuSansMono Nerd Font";
+	font-size: 15px;
+}
+
 #clock {
-	background-color: #5f6b5c;
+
 	padding: 0 10px 0 10px;
+	background-color: #357978;
+	color: #eee;
 }
 
 #battery {
@@ -114,7 +121,7 @@ window#waybar.chromium {
 }
 
 #battery.charging {
-    border-bottom: 3px solid #c5933a;
+    border-bottom: 3px solid #a8bcba;
 }
 
 @keyframes blink {
@@ -149,10 +156,6 @@ label:focus {
 
 #backlight {
     background-color: rgba(0, 0, 0, 0);
-}
-
-#network {
-    background-color: #2980b9;
 }
 
 #network.disconnected {
