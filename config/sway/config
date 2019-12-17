@@ -84,8 +84,11 @@ set $gnome-schema org.gnome.desktop.interface
 		exec ~/.azotebg
 
 # Your preferred application launcher
-# Note: it's recommended that you pass the final command to sway
-	set $menu wofi --show run | xargs swaymsg exec
+# `dmenu` is way faster than `wofi --show run`, but requires the wofi-wayland-git package (or use bemenu)
+# Note: it's recommended that you pass the final command to sway.
+#
+	set $menu dmenu_path | dmenu -h 25 -nb '#434c5e' -nf '#eeeeee' -sb '#8fbcbb' -sf '#434c5e' -fn 'DejaVu Sans Mono 10' -p 'run' | xargs swaymsg exec
+	# set $menu wofi --show run | xargs swaymsg exec
 	set $drun wofi -i --show drun | xargs swaymsg exec
 
 #
