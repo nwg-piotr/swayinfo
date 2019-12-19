@@ -13,6 +13,8 @@ License: GPL3
 
 Dependencies: 'gtk3' 'libappindicator-gtk3' 'python' 'python-gobject' 'python-i3ipc'.
 Also all /icons/scratchpad*.png files are necessary.
+
+Command: scratchpad_indicator.py [refresh_interval_ms]
 """
 
 import sys
@@ -36,6 +38,7 @@ ICON_MULTIPLE: str = '/home/piotr/PycharmProjects/swayinfo/icons/scratchpad_mult
 
 
 def main():
+    # GLib timeout in miliseconds
     interval = 1000
     try:
         interval = int(sys.argv[1])
@@ -54,6 +57,7 @@ def main():
     indicator.set_menu(e_menu)
 
     check_scratchpad(connection)
+
     GLib.timeout_add(interval, check_scratchpad, connection)
     Gtk.main()
 
@@ -68,10 +72,9 @@ def build_menu():
         item = Gtk.MenuItem.new_with_label(title)
         item.connect('activate', show_scratchpad, title)
         menu.append(item)
-    
-    if len(content_titles) > 0:
-        item = Gtk.SeparatorMenuItem()
-        menu.append(item)
+
+    item = Gtk.SeparatorMenuItem()
+    menu.append(item)
 
     item = Gtk.MenuItem.new_with_label('Close indicator')
     item.connect('activate', quit)
@@ -96,6 +99,9 @@ class EmptyMenu(Gtk.Menu):
 
 
 def show_scratchpad(item, title):
+    """
+    Shows a window selected from scratchpad by title
+    """
     title = title.replace(" ", "\\s")
     cmd = 'i3-msg [title="^{}*"] scratchpad show'.format(title)
     subprocess.check_output(cmd, shell=True)
@@ -109,10 +115,10 @@ def check_scratchpad(connection):
     leaves = scratchpad[0].floating_nodes
     
     for node in leaves:
-        # find names on sway
+        # find names of windows in scratchpad (sway)
         if node.name:
             current_titles.append(node.name)
-        # find names on i3
+        # find names of windows in scratchpad (i3)
         else:
             current_titles.append(node.nodes[0].name)
     
@@ -131,7 +137,7 @@ def check_scratchpad(connection):
         if indicator.get_menu():
             try:
                 indicator.get_menu().is_empty
-            except Exception as e:
+            except:
                 indicator.set_menu(e_menu)
 
         if len(content_titles) > 0:
