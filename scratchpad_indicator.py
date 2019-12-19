@@ -10,6 +10,8 @@ Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
 Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
+
+Dependencies: 'gtk3' 'libappindicator-gtk3' 'python' 'python-gobject' 'python-i3ipc'
 """
 
 import sys
