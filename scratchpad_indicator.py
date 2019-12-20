@@ -51,7 +51,6 @@ from i3ipc import Connection
 
 indicator = AppIndicator3.Indicator.new('scratchpad_indicator', '', AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
 content_titles = []
-e_menu = None
 connection = None
 
 # edit path according to where you saved the files
@@ -78,20 +77,17 @@ def main():
     # GLib timeout in miliseconds
     interval = 1000
     if len(sys.argv) > 1:
-        if sys.argv[1].upper == '-H' or sys.argv[1].upper == '--HELP':
-            print('Usage: scratchpad_indicator.py [refresh_rate_ms]')
-        else:
-            try:
-                interval = int(sys.argv[1])
-                if interval < 500:
-                    interval = 500
-            except:
-                pass
+        try:
+            interval = int(sys.argv[1])
+            if interval < 500:
+                interval = 500
+        except:
+            pass
     
     global connection
     connection = Connection()
 
-    global indicator, e_menu
+    global indicator
     indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
     indicator.set_icon_full(ICON_EMPTY, 'Scratchpad')
 
@@ -138,7 +134,7 @@ def show_scratchpad(item, title):
 
 
 def check_scratchpad(conn):
-    global content_titles, indicator, e_menu
+    global content_titles, indicator
     current_titles = []
     
     scratchpad = conn.get_tree().find_named('__i3_scratch')
