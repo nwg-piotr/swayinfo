@@ -74,7 +74,7 @@ def main():
         print('\nScript already running, exiting...\n')
         sys.exit(0)
 
-    # GLib timeout in miliseconds
+    # GLib timeout in milliseconds
     interval = 1000
     if len(sys.argv) > 1:
         try:
