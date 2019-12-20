@@ -17,8 +17,11 @@ Also all /icons/scratchpad*.png files are necessary.
 Command: scratchpad_indicator.py [refresh_interval_ms]
 """
 
+import os
 import sys
 import gi
+import fcntl
+import tempfile
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
@@ -38,6 +41,16 @@ ICON_MULTIPLE: str = '/home/piotr/PycharmProjects/swayinfo/icons/scratchpad_mult
 
 
 def main():
+    # exit if already running, thanks to Slava V at https://stackoverflow.com/a/384493/4040598
+    pid_file = os.path.join(tempfile.gettempdir(), 'scratch_indicator.pid')
+    fp = open(pid_file, 'w')
+    try:
+        fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError:
+        # another instance is running
+        print('\nScript already running, exiting...\n')
+        sys.exit(0)
+
     # GLib timeout in miliseconds
     interval = 1000
     try:
