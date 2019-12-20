@@ -2,8 +2,8 @@
 # _*_ coding: utf-8 _*_
 
 """
-This script uses the i3ipc python library to display gtk3 AppIndicator3 tray icon + menu w/ the scratchpad content.
-AppIndicator3.IndicatorStatus.PASSIVE will hide the icon on i3 only, until tray is fixed on sway.
+This script uses the i3ipc python library to display gtk3 AppIndicator3 tray icon & menu w/ the scratchpad content.
+Note: IndicatorStatus.PASSIVE (if scratchpad empty) will hide the icon on i3 only, until tray is fixed on sway.
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
@@ -15,6 +15,26 @@ Dependencies: 'gtk3' 'libappindicator-gtk3' 'python' 'python-gobject' 'python-i3
 Also all /icons/scratchpad*.png files are necessary!
 
 Command: scratchpad_indicator.py [refresh_interval_ms]
+
+USAGE:
+
+1. Save the 'scratchpad_indicator.py' file and all the '/icons/scratchpad*.png' files anywhere
+    (e.g. ~/.local/bin/scratchpad_indicator/); make the file executable;
+
+2. edit ICON_EMPTY, ICON_SINGLE and ICON_MULTIPLE strings below, according to the icons location (must be full path!);
+
+3. add the following line to your sway / i3 config file:
+
+    `exec_always /path/to/the/script/scratchpad_indicator.py`
+
+    for sway or
+
+    `exec_always --no-startup-id /path/to/the/script/scratchpad_indicator.py`
+
+    for i3;
+
+4. you may append your desired icon refresh rate in milliseconds to the command. If not given, the refresh interval
+    is 1000 ms by default. Values below 500 will be rounded up to 500.
 """
 
 import os
@@ -75,8 +95,8 @@ def main():
     indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
     indicator.set_icon_full(ICON_EMPTY, 'Scratchpad')
 
-    e_menu = EmptyMenu()
-    indicator.set_menu(e_menu)
+    menu = build_menu()
+    indicator.set_menu(menu)
 
     check_scratchpad(connection)
 
@@ -90,13 +110,14 @@ def build_menu():
     """
     global content_titles
     menu = Gtk.Menu()
-    for title in content_titles:
-        item = Gtk.MenuItem.new_with_label(title)
-        item.connect('activate', show_scratchpad, title)
-        menu.append(item)
+    if len(content_titles) > 0:
+        for title in content_titles:
+            item = Gtk.MenuItem.new_with_label(title)
+            item.connect('activate', show_scratchpad, title)
+            menu.append(item)
 
-    item = Gtk.SeparatorMenuItem()
-    menu.append(item)
+        item = Gtk.SeparatorMenuItem()
+        menu.append(item)
 
     item = Gtk.MenuItem.new_with_label('Close indicator')
     item.connect('activate', close)
@@ -104,20 +125,6 @@ def build_menu():
     menu.show_all()
 
     return menu
-
-
-class EmptyMenu(Gtk.Menu):
-    """
-    Subclassed to add the 'is_empty' field, which - if found - prevents from setting the menu
-    again and again if scratchpad empty.
-    """
-    def __init__(self):
-        super().__init__()
-        self.is_empty = True
-        item = Gtk.MenuItem.new_with_label('Close indicator')
-        item.connect('activate', close)
-        self.append(item)
-        self.show_all()
 
 
 def show_scratchpad(item, title):
@@ -130,11 +137,11 @@ def show_scratchpad(item, title):
     connection.command(cmd)
 
 
-def check_scratchpad(connection):
+def check_scratchpad(conn):
     global content_titles, indicator, e_menu
     current_titles = []
     
-    scratchpad = connection.get_tree().find_named('__i3_scratch')
+    scratchpad = conn.get_tree().find_named('__i3_scratch')
     leaves = scratchpad[0].floating_nodes
     
     for node in leaves:
@@ -146,28 +153,23 @@ def check_scratchpad(connection):
             current_titles.append(node.nodes[0].name)
     
     if len(current_titles) > 0:
+        if not content_titles == current_titles:
+            content_titles = current_titles
+            indicator.set_menu(build_menu())
+
         indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         if len(current_titles) == 1:
             indicator.set_icon_full(ICON_SINGLE, 'Scratchpad')
         else:
             indicator.set_icon_full(ICON_MULTIPLE, 'Scratchpad')
 
-        if not current_titles == content_titles:
+    else:
+        if not content_titles == current_titles:
             content_titles = current_titles
             indicator.set_menu(build_menu())
-    else:
+
         indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
         indicator.set_icon_full(ICON_EMPTY, 'Scratchpad')
-        if indicator.get_menu():
-            try:
-                # Is the menu an instance of our EmptyMenu subclass?
-                indicator.get_menu().is_empty
-            except:
-                indicator.set_menu(e_menu)
-
-        if len(content_titles) > 0:
-            indicator.set_menu(build_menu())
-            content_titles = []
 
     return True
 
