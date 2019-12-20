@@ -3,8 +3,7 @@
 
 """
 This script uses the i3ipc python library to display gtk3 AppIndicator3 tray icon + menu w/ the scratchpad content.
-No AppIndicator3.IndicatorStatus other than ACTIVE has been used here, since it does not (yet?) work on sway:
-it only displays the icon defined with indicator.set_icon_full.
+AppIndicator3.IndicatorStatus.PASSIVE will hide the icon on i3 only, until tray is fixed on sway.
 
 Author: Piotr Miller
 e-mail: nwg.piotr@gmail.com
@@ -73,7 +72,7 @@ def main():
     connection = Connection()
 
     global indicator, e_menu
-    indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+    indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
     indicator.set_icon_full(ICON_EMPTY, 'Scratchpad')
 
     e_menu = EmptyMenu()
@@ -147,7 +146,7 @@ def check_scratchpad(connection):
             current_titles.append(node.nodes[0].name)
     
     if len(current_titles) > 0:
-
+        indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         if len(current_titles) == 1:
             indicator.set_icon_full(ICON_SINGLE, 'Scratchpad')
         else:
@@ -157,6 +156,7 @@ def check_scratchpad(connection):
             content_titles = current_titles
             indicator.set_menu(build_menu())
     else:
+        indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
         indicator.set_icon_full(ICON_EMPTY, 'Scratchpad')
         if indicator.get_menu():
             try:
