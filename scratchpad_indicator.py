@@ -18,7 +18,6 @@ Command: scratchpad_indicator.py [refresh_interval_ms]
 """
 
 import sys
-import subprocess
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -30,6 +29,7 @@ from i3ipc import Connection
 indicator = AppIndicator3.Indicator.new('scratchpad_indicator', '', AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
 content_titles = []
 e_menu = None
+connection = None
 
 # edit paths according to your icons location
 ICON_EMPTY: str = '/home/piotr/PycharmProjects/swayinfo/icons/scratchpad_empty.png'
@@ -47,6 +47,7 @@ def main():
     except:
         pass
     
+    global connection
     connection = Connection()
 
     global indicator, e_menu
@@ -77,7 +78,7 @@ def build_menu():
     menu.append(item)
 
     item = Gtk.MenuItem.new_with_label('Close indicator')
-    item.connect('activate', quit)
+    item.connect('activate', close)
     menu.append(item)
     menu.show_all()
 
@@ -93,7 +94,7 @@ class EmptyMenu(Gtk.Menu):
         super().__init__()
         self.is_empty = True
         item = Gtk.MenuItem.new_with_label('Close indicator')
-        item.connect('activate', quit)
+        item.connect('activate', close)
         self.append(item)
         self.show_all()
 
@@ -103,8 +104,9 @@ def show_scratchpad(item, title):
     Shows a window selected from scratchpad by title
     """
     title = title.replace(" ", "\\s")
-    cmd = 'i3-msg [title="^{}*"] scratchpad show'.format(title)
-    subprocess.check_output(cmd, shell=True)
+    cmd = '[title="^{}*"] scratchpad show'.format(title)
+    global connection
+    connection.command(cmd)
 
 
 def check_scratchpad(connection):
@@ -136,6 +138,7 @@ def check_scratchpad(connection):
         indicator.set_icon_full(ICON_EMPTY, 'Scratchpad')
         if indicator.get_menu():
             try:
+                # Is the menu an instance of our EmptyMenu subclass?
                 indicator.get_menu().is_empty
             except:
                 indicator.set_menu(e_menu)
@@ -147,7 +150,7 @@ def check_scratchpad(connection):
     return True
 
 
-def quit(_):
+def close(_):
     Gtk.main_quit()
 
 
