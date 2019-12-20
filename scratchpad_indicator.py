@@ -12,7 +12,8 @@ Project: https://github.com/nwg-piotr/swayinfo
 License: GPL3
 
 Dependencies: 'gtk3' 'libappindicator-gtk3' 'python' 'python-gobject' 'python-i3ipc'.
-Also all /icons/scratchpad*.png files are necessary.
+
+Also all /icons/scratchpad*.png files are necessary!
 
 Command: scratchpad_indicator.py [refresh_interval_ms]
 """
@@ -34,13 +35,18 @@ content_titles = []
 e_menu = None
 connection = None
 
-# edit paths according to your icons location
+# edit path according to where you saved the files
 ICON_EMPTY: str = '/home/piotr/PycharmProjects/swayinfo/icons/scratchpad_empty.png'
 ICON_SINGLE: str = '/home/piotr/PycharmProjects/swayinfo/icons/scratchpad_single.png'
 ICON_MULTIPLE: str = '/home/piotr/PycharmProjects/swayinfo/icons/scratchpad_multiple.png'
 
 
 def main():
+    if len(sys.argv) > 1:
+        if sys.argv[1].upper() == '-H' or sys.argv[1].upper() == '--HELP':
+            print('\nUsage: scratchpad_indicator.py [refresh_rate_ms] (1000 by default)\n')
+            sys.exit(0)
+            
     # exit if already running, thanks to Slava V at https://stackoverflow.com/a/384493/4040598
     pid_file = os.path.join(tempfile.gettempdir(), 'scratch_indicator.pid')
     fp = open(pid_file, 'w')
@@ -52,12 +58,16 @@ def main():
 
     # GLib timeout in miliseconds
     interval = 1000
-    try:
-        interval = int(sys.argv[1])
-        if interval < 500:
-            interval = 500
-    except:
-        pass
+    if len(sys.argv) > 1:
+        if sys.argv[1].upper == '-H' or sys.argv[1].upper == '--HELP':
+            print('Usage: scratchpad_indicator.py [refresh_rate_ms]')
+        else:
+            try:
+                interval = int(sys.argv[1])
+                if interval < 500:
+                    interval = 500
+            except:
+                pass
     
     global connection
     connection = Connection()
