@@ -31,9 +31,9 @@ USAGE:
 
     `exec_always --no-startup-id /path/to/the/script/scratchpad_indicator.py`
 
-    for i3;
+    for i3.
 
-4. you may append your desired icon refresh rate in milliseconds to the command. If not given, the refresh interval
+4. You may append your desired icon refresh rate in milliseconds to the command. If not given, the refresh interval
     is 1000 ms by default. Values below 500 will be rounded up to 500.
 """
 
