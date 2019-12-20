@@ -47,7 +47,6 @@ def main():
     try:
         fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except IOError:
-        # another instance is running
         print('\nScript already running, exiting...\n')
         sys.exit(0)
 
