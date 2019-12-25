@@ -19,7 +19,7 @@ import subprocess
 
 def main():
 
-    low = 29
+    low = 20
     full = 97
 
     # You may override levels given above with arguments: [low <value>] [full <value>]
