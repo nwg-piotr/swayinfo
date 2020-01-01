@@ -2,7 +2,9 @@
 # _*_ coding: utf-8 _*_
 
 """
-Work in progress.
+This script, intended for sway window manager, displays a try icon w/ the system menu attached to it.
+Since GTK menus are still buggy on sway, it needs a workaround to work properly: you need the autotiling.py script
+launched first. Lines 33-34 do the job.
 """
 
 import os
@@ -14,7 +16,10 @@ import tempfile
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
-from gi.repository import Gtk, AppIndicator3
+from gi.repository import Gtk, Gdk, GLib, AppIndicator3
+
+from i3ipc import Connection, Event
+i3 = Connection()
 
 my_icon = AppIndicator3.Indicator.new('menu_icon', 'start-here',
                                         AppIndicator3.IndicatorCategory.OTHER)
@@ -51,7 +56,8 @@ def main():
     my_icon.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
     list_entries()
-    my_icon.set_menu(build_menu())
+    menu = build_menu()
+    my_icon.set_menu(menu)
 
     Gtk.main()
 
@@ -98,7 +104,7 @@ def build_menu():
     item = Gtk.SeparatorMenuItem()
     menu.append(item)
     
-    item = Gtk.MenuItem.new_with_label('Remove menu icon')
+    item = Gtk.MenuItem.new_with_label('Hide menu icon')
     item.connect('activate', close)
     menu.append(item)
     menu.show_all()
@@ -121,7 +127,7 @@ def sub_menu(entries_list, name):
         hbox.pack_start(image, False, False, 0)
         hbox.pack_start(label, False, False, 4)
         subitem.add(hbox)
-        subitem.connect_after('activate', launch, entry.exec)
+        subitem.connect('activate', launch, entry.exec)
         submenu.append(subitem)
     item.set_submenu(submenu)
 
