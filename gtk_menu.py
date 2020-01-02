@@ -12,8 +12,9 @@ import sys
 import subprocess
 
 import gi
+
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 import cairo
 
 from i3ipc import Connection
@@ -21,7 +22,7 @@ from i3ipc import Connection
 i3 = Connection()
 
 c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science, c_settings, c_system, \
-    c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
+c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
 
 win = None
 
@@ -33,9 +34,9 @@ class MainWindow(Gtk.Window):
         self.set_title('sway_gtk_menu')
         self.set_resizable(True)
         self.connect("destroy", Gtk.main_quit)
-        self.connect("focus-out-event", self.die)
-        self.connect("key-release-event", self.test)
-        self.connect("button-press-event", self.test)
+        # self.connect("focus-out-event", self.die)
+        self.connect("key-release-event", self.die)
+        self.connect("button-press-event", self.die)
         self.connect('draw', self.draw)
         self.set_size_request(w, h)
 
@@ -52,7 +53,6 @@ class MainWindow(Gtk.Window):
         outer_box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
         hbox = Gtk.HBox(spacing=5)
         self.button = Gtk.Button.new_with_label('')
-        # self.button = Gtk.Button.new_from_icon_name("start-here", Gtk.IconSize.SMALL_TOOLBAR)
         hbox.pack_start(self.button, False, False, 0)
         outer_box.add(hbox)
         self.add(outer_box)
@@ -62,12 +62,8 @@ class MainWindow(Gtk.Window):
         context.set_operator(cairo.OPERATOR_SOURCE)
         context.paint()
         context.set_operator(cairo.OPERATOR_OVER)
-        
+
     def die(self, *args):
-        terminate(None)
-        
-    def test(self, *args):
-        print(args)
         terminate(None)
 
 
@@ -109,17 +105,17 @@ def force_floating():
             GLib.timeout_add(300, open_menu)
 
             return False
-        
+
     except:
         pass
-        
+
     return True
 
 
 def open_menu(*args):
     win.menu = build_menu()
     win.menu.popup_at_widget(win.button, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, None)
-    
+
 
 def list_entries():
     for f in os.listdir('/usr/share/applications'):
@@ -180,10 +176,18 @@ class DesktopEntry(object):
         if 'Utility' in self.categories:
             c_utility.append(self)
 
-        if self not in c_audio_video and self not in c_development and self not in c_education and self not in c_game \
-                and self not in c_graphics and self not in c_network and self not in c_office and self not in c_science \
-                and self not in c_settings and self not in c_system and self not in c_utility:
+        if self not in c_audio_video and self not in c_development and self not in c_education \
+                and self not in c_game and self not in c_graphics and self not in c_network \
+                and self not in c_office and self not in c_science and self not in c_settings \
+                and self not in c_system and self not in c_utility:
+
             c_other.append(self)
+
+        groups = [c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science,
+                  c_settings, c_system, c_utility]
+
+        for group in groups:
+            group.sort(key=lambda x: x.name)
 
 
 def build_menu():
@@ -233,7 +237,9 @@ def sub_menu(entries_list, name):
         subitem = Gtk.MenuItem()
         hbox = Gtk.HBox()
         if entry.icon.startswith('/'):
-            image = Gtk.Image.new_from_file(entry.icon)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(entry.icon, 16, 16)
+            # image = Gtk.Image.new_from_file(entry.icon)
+            image = Gtk.Image.new_from_pixbuf(pixbuf)
         else:
             image = Gtk.Image.new_from_icon_name(entry.icon, Gtk.IconSize.MENU)
         label = Gtk.Label()
