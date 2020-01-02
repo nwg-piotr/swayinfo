@@ -112,7 +112,7 @@ def force_floating():
     return True
 
 
-def open_menu(*args):
+def open_menu():
     win.menu = build_menu()
     win.menu.popup_at_widget(win.button, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, None)
 
@@ -140,7 +140,7 @@ def list_entries():
                             _categories = line.split('=')[1].strip()
 
                 if _name and _exec and _categories:
-                    app = DesktopEntry(_name, _exec, _icon, _categories)
+                    DesktopEntry(_name, _exec, _icon, _categories)
 
         except Exception as e:
             print(e)
@@ -224,6 +224,7 @@ def build_menu():
     item = Gtk.MenuItem.new_with_label('Close menu')
     item.connect('activate', terminate)
     menu.append(item)"""
+
     menu.connect("hide", win.die)
     menu.show_all()
 
@@ -237,11 +238,17 @@ def sub_menu(entries_list, name):
         subitem = Gtk.MenuItem()
         hbox = Gtk.HBox()
         if entry.icon.startswith('/'):
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(entry.icon, 16, 16)
-            # image = Gtk.Image.new_from_file(entry.icon)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(entry.icon, 20, 20)
             image = Gtk.Image.new_from_pixbuf(pixbuf)
         else:
-            image = Gtk.Image.new_from_icon_name(entry.icon, Gtk.IconSize.MENU)
+            icon_theme = Gtk.IconTheme.get_default()
+            icon = icon_theme.lookup_icon(entry.icon, 24, 0)
+            if icon:
+                try:
+                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(icon.get_filename(), 20, 20)
+                    image = Gtk.Image.new_from_pixbuf(pixbuf)
+                except:
+                    pass
         label = Gtk.Label()
         label.set_text(entry.name)
         hbox.pack_start(image, False, False, 0)
