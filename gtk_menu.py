@@ -214,12 +214,12 @@ def build_menu():
     if c_other:
         menu.append(sub_menu(c_other, 'Other'))
 
-    item = Gtk.SeparatorMenuItem()
+    """item = Gtk.SeparatorMenuItem()
     menu.append(item)
 
     item = Gtk.MenuItem.new_with_label('Close menu')
     item.connect('activate', terminate)
-    menu.append(item)
+    menu.append(item)"""
     menu.connect("hide", win.die)
     menu.show_all()
 
