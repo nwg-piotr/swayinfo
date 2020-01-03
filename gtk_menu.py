@@ -21,14 +21,15 @@ import cairo
 i3ipc = False
 try:
     from i3ipc import Connection
+    i3 = Connection()
     i3ipc = True
-except:
+except ModuleNotFoundError:
     pass
-    
 
-i3 = Connection()
-i3.command('for_window [title="sway_gtk_menu"] border pixel 0')
-i3.command('for_window [title="sway_gtk_menu"] floating enable')
+if not subprocess.run(['swaymsg for_window [title="sway_gtk_menu"] floating enable, border pixel 0'], shell=True, stdout=subprocess.DEVNULL).returncode == 0:
+    if not subprocess.run(['i3-msg for_window [title="sway_gtk_menu"] floating enable, border pixel 0'], shell=True, stdout=subprocess.DEVNULL).returncode == 0:
+        print('\nNeither swaymsg nor i3-msg found, exiting...')
+        sys.exit(1)
 
 c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science, c_settings, c_system, \
     c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
