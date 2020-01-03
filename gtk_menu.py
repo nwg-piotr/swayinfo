@@ -2,7 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 """
-This is an attempt to create a menu that behaves decently on sway window manager
+This is an attempt to create a menu that behaves decently on sway window manager.
 """
 
 import os
@@ -18,16 +18,22 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 import cairo
 
-i3ipc = False
+
 try:
     from i3ipc import Connection
     i3 = Connection()
     i3ipc = True
 except ModuleNotFoundError:
-    pass
+    i3ipc = False
 
-if not subprocess.run(['swaymsg for_window [title="sway_gtk_menu"] floating enable, border pixel 0'], shell=True, stdout=subprocess.DEVNULL).returncode == 0:
-    if not subprocess.run(['i3-msg for_window [title="sway_gtk_menu"] floating enable, border pixel 0'], shell=True, stdout=subprocess.DEVNULL).returncode == 0:
+# overlay window: force floating, disable border
+if not subprocess.run(
+        ['swaymsg', 'for_window', '[title=\"sway_gtk_menu\"]', 'floating', 'enable,', 'border', 'pixel', '0'],
+        stdout=subprocess.DEVNULL).returncode == 0:
+    if not subprocess.run(
+            ['i3-msg', 'for_window', '[title=\"sway_gtk_menu\"]', 'floating', 'enable,', 'border', 'pixel', '0'],
+            stdout=subprocess.DEVNULL).returncode == 0:
+
         print('\nNeither swaymsg nor i3-msg found, exiting...')
         sys.exit(1)
 
@@ -43,8 +49,6 @@ class MainWindow(Gtk.Window):
         Gtk.Window.__init__(self)
         self.set_title('sway_gtk_menu')
         self.connect("destroy", Gtk.main_quit)
-        # self.connect("focus-out-event", self.die)
-        self.connect("key-release-event", self.die)
         self.connect("button-press-event", self.die)
         self.connect('draw', self.draw)
 
@@ -58,9 +62,9 @@ class MainWindow(Gtk.Window):
         self.set_app_paintable(True)
 
         self.menu = None
-        outer_box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
+        outer_box = Gtk.Box(spacing=0, orientation=Gtk.Orientation.VERTICAL)
         vbox = Gtk.VBox(spacing=0, border_width=0)
-        hbox = Gtk.HBox(spacing=5, border_width=0)
+        hbox = Gtk.HBox(spacing=0, border_width=0)
         self.button = Gtk.Button.new_with_label('')
         if args.right:
             hbox.pack_end(self.button, False, False, 0)
@@ -83,7 +87,7 @@ class MainWindow(Gtk.Window):
         context.set_operator(cairo.OPERATOR_OVER)
 
     def die(self, *args):
-        terminate(None)
+        Gtk.main_quit()
 
 
 def main():
@@ -98,8 +102,8 @@ def main():
     parser = argparse.ArgumentParser(description="A simple sway menu")
     parser.add_argument("-b", "--bottom", action="store_true", help="display at the bottom")
     parser.add_argument("-r", "--right", action="store_true", help="display on the right side")
-    parser.add_argument("-s", type=int, default=50, help="menu icon size (int, min: 16, max: 48, def: 50)")
-    parser.add_argument("-t", type=int, default=100, help="menu timeout in milliseconds (int, def: 100)")
+    parser.add_argument("-s", type=int, default=20, help="menu icon size (int, min: 16, max: 48, def: 20)")
+    parser.add_argument("-t", type=int, default=50, help="menu timeout in milliseconds (int, def: 20)")
     parser.add_argument("-o", type=float, default=0.3, help="overlay opacity (float, min: 0.0, max: 1.0, def: 0.3)")
     global args
     args = parser.parse_args()
@@ -272,11 +276,8 @@ def sub_menu(entries_list, name):
 
 
 def launch(item, command):
+    print('Command: ', command)
     subprocess.Popen('exec {}'.format(command), shell=True)
-    terminate(None)
-
-
-def terminate(_):
     Gtk.main_quit()
 
 
