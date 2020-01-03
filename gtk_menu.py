@@ -99,7 +99,7 @@ def main():
     except IOError:
         sys.exit(0)
 
-    parser = argparse.ArgumentParser(description="A simple sway menu")
+    parser = argparse.ArgumentParser(description="A simple sway/i3 menu")
     parser.add_argument("-b", "--bottom", action="store_true", help="display at the bottom")
     parser.add_argument("-r", "--right", action="store_true", help="display on the right side")
     parser.add_argument("-s", type=int, default=20, help="menu icon size (int, min: 16, max: 48, def: 20)")
