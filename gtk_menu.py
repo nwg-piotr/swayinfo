@@ -103,7 +103,7 @@ def main():
     parser.add_argument("-b", "--bottom", action="store_true", help="display at the bottom")
     parser.add_argument("-r", "--right", action="store_true", help="display on the right side")
     parser.add_argument("-s", type=int, default=20, help="menu icon size (int, min: 16, max: 48, def: 20)")
-    parser.add_argument("-t", type=int, default=50, help="menu timeout in milliseconds (int, def: 20)")
+    parser.add_argument("-t", type=int, default=50, help="menu timeout in milliseconds (int, def: 50)")
     parser.add_argument("-o", type=float, default=0.3, help="overlay opacity (float, min: 0.0, max: 1.0, def: 0.3)")
     global args
     args = parser.parse_args()
