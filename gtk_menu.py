@@ -10,6 +10,7 @@ import tempfile
 import fcntl
 import sys
 import subprocess
+import argparse
 
 import gi
 
@@ -22,9 +23,12 @@ from i3ipc import Connection
 i3 = Connection()
 
 c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science, c_settings, c_system, \
-c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
+    c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
 
 win = None
+
+ICON_SIZE: int = 20
+args = None
 
 
 class MainWindow(Gtk.Window):
@@ -51,10 +55,18 @@ class MainWindow(Gtk.Window):
 
         self.menu = None
         outer_box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
+        vbox = Gtk.VBox(spacing=5)
         hbox = Gtk.HBox(spacing=5)
         self.button = Gtk.Button.new_with_label('')
-        hbox.pack_start(self.button, False, False, 0)
-        outer_box.add(hbox)
+        if args.right:
+            hbox.pack_end(self.button, False, False, 0)
+        else:
+            hbox.pack_start(self.button, False, False, 0)
+        if args.bottom:
+            vbox.pack_end(hbox, False, False, 0)
+        else:
+            vbox.pack_start(hbox, False, False, 0)
+        outer_box.pack_start(vbox, True, True, 0)
         self.add(outer_box)
 
     def draw(self, widget, context):
@@ -75,6 +87,19 @@ def main():
         fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except IOError:
         sys.exit(0)
+
+    parser = argparse.ArgumentParser(description="A simple sway menu")
+    parser.add_argument("-b", "--bottom", action="store_true", help="display at the bottom")
+    parser.add_argument("-r", "--right", action="store_true", help="display on the right side")
+    parser.add_argument("-s", type=int, default=20, help="menu icon size (min 16, max 48, default 20)")
+    global args
+    args = parser.parse_args()
+
+    if args.s < 16:
+        args.s = 16
+    elif args.s > 48:
+        args.s = 48
+    print(args)
 
     list_entries()
     dimensions = display_dimensions()
@@ -105,7 +130,6 @@ def force_floating():
             GLib.timeout_add(300, open_menu)
 
             return False
-
     except:
         pass
 
@@ -218,13 +242,6 @@ def build_menu():
     if c_other:
         menu.append(sub_menu(c_other, 'Other'))
 
-    """item = Gtk.SeparatorMenuItem()
-    menu.append(item)
-
-    item = Gtk.MenuItem.new_with_label('Close menu')
-    item.connect('activate', terminate)
-    menu.append(item)"""
-
     menu.connect("hide", win.die)
     menu.show_all()
 
@@ -237,21 +254,21 @@ def sub_menu(entries_list, name):
     for entry in entries_list:
         subitem = Gtk.MenuItem()
         hbox = Gtk.HBox()
+        icon_theme = Gtk.IconTheme.get_default()
         if entry.icon.startswith('/'):
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(entry.icon, 20, 20)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(entry.icon, args.s, args.s)
             image = Gtk.Image.new_from_pixbuf(pixbuf)
         else:
-            icon_theme = Gtk.IconTheme.get_default()
-            icon = icon_theme.lookup_icon(entry.icon, 24, 0)
-            if icon:
-                try:
-                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(icon.get_filename(), 20, 20)
-                    image = Gtk.Image.new_from_pixbuf(pixbuf)
-                except:
-                    pass
+            image = None
+            try:
+                pixbuf = icon_theme.load_icon(entry.icon, args.s, Gtk.IconLookupFlags.FORCE_SIZE)
+                image = Gtk.Image.new_from_pixbuf(pixbuf)
+            except:
+                pass
         label = Gtk.Label()
         label.set_text(entry.name)
-        hbox.pack_start(image, False, False, 0)
+        if image:
+            hbox.pack_start(image, False, False, 0)
         hbox.pack_start(label, False, False, 4)
         subitem.add(hbox)
         subitem.connect('activate', launch, entry.exec)
