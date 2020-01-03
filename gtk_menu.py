@@ -18,31 +18,34 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 import cairo
 
-from i3ipc import Connection
+i3ipc = False
+try:
+    from i3ipc import Connection
+    i3ipc = True
+except:
+    pass
+    
 
 i3 = Connection()
+i3.command('for_window [title="sway_gtk_menu"] border pixel 0')
+i3.command('for_window [title="sway_gtk_menu"] floating enable')
 
 c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science, c_settings, c_system, \
     c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
 
 win = None
-
-ICON_SIZE: int = 20
 args = None
 
 
 class MainWindow(Gtk.Window):
-    def __init__(self, dimensions):
-        w, h = dimensions
+    def __init__(self):
         Gtk.Window.__init__(self)
         self.set_title('sway_gtk_menu')
-        self.set_resizable(True)
         self.connect("destroy", Gtk.main_quit)
         # self.connect("focus-out-event", self.die)
         self.connect("key-release-event", self.die)
         self.connect("button-press-event", self.die)
         self.connect('draw', self.draw)
-        self.set_size_request(w, h)
 
         # Credits for transparency go to  KurtJacobson:
         # https://gist.github.com/KurtJacobson/374c8cb83aee4851d39981b9c7e2c22c
@@ -55,8 +58,8 @@ class MainWindow(Gtk.Window):
 
         self.menu = None
         outer_box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
-        vbox = Gtk.VBox(spacing=5)
-        hbox = Gtk.HBox(spacing=5)
+        vbox = Gtk.VBox(spacing=0, border_width=0)
+        hbox = Gtk.HBox(spacing=5, border_width=0)
         self.button = Gtk.Button.new_with_label('')
         if args.right:
             hbox.pack_end(self.button, False, False, 0)
@@ -69,8 +72,11 @@ class MainWindow(Gtk.Window):
         outer_box.pack_start(vbox, True, True, 0)
         self.add(outer_box)
 
+    def resize(self, w, h):
+        self.set_size_request(w, h)
+        
     def draw(self, widget, context):
-        context.set_source_rgba(0, 0, 0, 0)
+        context.set_source_rgba(0, 0, 0, args.o)
         context.set_operator(cairo.OPERATOR_SOURCE)
         context.paint()
         context.set_operator(cairo.OPERATOR_OVER)
@@ -91,54 +97,39 @@ def main():
     parser = argparse.ArgumentParser(description="A simple sway menu")
     parser.add_argument("-b", "--bottom", action="store_true", help="display at the bottom")
     parser.add_argument("-r", "--right", action="store_true", help="display on the right side")
-    parser.add_argument("-s", type=int, default=20, help="menu icon size (min 16, max 48, default 20)")
+    parser.add_argument("-s", type=int, default=50, help="menu icon size (int, min: 16, max: 48, def: 50)")
+    parser.add_argument("-t", type=int, default=100, help="menu timeout in milliseconds (int, def: 100)")
+    parser.add_argument("-o", type=float, default=0.3, help="overlay opacity (float, min: 0.0, max: 1.0, def: 0.3)")
     global args
     args = parser.parse_args()
-
     if args.s < 16:
         args.s = 16
     elif args.s > 48:
         args.s = 48
-    print(args)
 
     list_entries()
-    dimensions = display_dimensions()
     global win
-    win = MainWindow(dimensions)
+    win = MainWindow()
+    w, h = display_dimensions()
+    win.resize(w, h)
     win.menu = build_menu()
     win.show_all()
-    GLib.timeout_add(1, force_floating)
+    GLib.timeout_add(args.t, win.menu.popup_at_widget, win.button, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, None)
     Gtk.main()
 
 
 def display_dimensions():
-    root = i3.get_tree()
-    found = False
-    f = root.find_focused()
-    while not found:
-        f = f.parent
-        found = f.type == 'output'
-
-    return f.rect.width, f.rect.height
-
-
-def force_floating():
-    try:
-        my_window = i3.get_tree().find_named('^sway_gtk_menu*')[0]
-        if my_window:
-            i3.command('floating enable')
-            GLib.timeout_add(300, open_menu)
-
-            return False
-    except:
-        pass
-
-    return True
-
-
-def open_menu():
-    win.menu = build_menu()
-    win.menu.popup_at_widget(win.button, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, None)
+    if i3ipc:
+        root = i3.get_tree()
+        found = False
+        f = root.find_focused()
+        while not found:
+            f = f.parent
+            found = f.type == 'output'
+        return f.rect.width, f.rect.height
+    else:
+        screen = win.get_screen()
+        return screen.width(), screen.height()
 
 
 def list_entries():
@@ -251,6 +242,7 @@ def build_menu():
 def sub_menu(entries_list, name):
     item = Gtk.MenuItem.new_with_label(name)
     submenu = Gtk.Menu()
+    submenu.set_property("reserve_toggle_size", False)
     for entry in entries_list:
         subitem = Gtk.MenuItem()
         hbox = Gtk.HBox()
