@@ -2,7 +2,7 @@
 # _*_ coding: utf-8 _*_
 
 """
-This is an attempt to create a menu that behaves decently on sway window manager.
+This is an attempt to create a menu that behaves decently on sway window manager. Work in progress.
 """
 
 import os
