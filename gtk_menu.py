@@ -18,27 +18,21 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 import cairo
 
-
 try:
     from i3ipc import Connection
+
     i3 = Connection()
     i3ipc = True
 except ModuleNotFoundError:
     i3ipc = False
 
-# overlay window: force floating, disable border
-if not subprocess.run(
-        ['swaymsg', 'for_window', '[title=\"sway_gtk_menu\"]', 'floating', 'enable,', 'border', 'pixel', '0'],
-        stdout=subprocess.DEVNULL).returncode == 0:
-    if not subprocess.run(
-            ['i3-msg', 'for_window', '[title=\"sway_gtk_menu\"]', 'floating', 'enable,', 'border', 'pixel', '0'],
-            stdout=subprocess.DEVNULL).returncode == 0:
-
-        print('\nNeither swaymsg nor i3-msg found, exiting...')
-        sys.exit(1)
+# overlay window: force floating, disable border; the variable indicates if we succeeded
+swaymsg: bool = subprocess.run(
+    ['swaymsg', 'for_window', '[title=\"sway_gtk_menu\"]', 'floating', 'enable,', 'border', 'pixel', '0'],
+    stdout=subprocess.DEVNULL).returncode == 0
 
 c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science, c_settings, c_system, \
-    c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
+c_utility, c_other = [], [], [], [], [], [], [], [], [], [], [], []
 
 win = None
 args = None
@@ -48,6 +42,7 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self)
         self.set_title('sway_gtk_menu')
+        self.set_role('sway_gtk_menu')
         self.connect("destroy", Gtk.main_quit)
         self.connect("button-press-event", self.die)
         self.connect('draw', self.draw)
@@ -79,7 +74,7 @@ class MainWindow(Gtk.Window):
 
     def resize(self, w, h):
         self.set_size_request(w, h)
-        
+
     def draw(self, widget, context):
         context.set_source_rgba(0, 0, 0, args.o)
         context.set_operator(cairo.OPERATOR_SOURCE)
@@ -99,11 +94,11 @@ def main():
     except IOError:
         sys.exit(0)
 
-    parser = argparse.ArgumentParser(description="A simple sway/i3 menu")
+    parser = argparse.ArgumentParser(description="A simple sway menu")
     parser.add_argument("-b", "--bottom", action="store_true", help="display at the bottom")
     parser.add_argument("-r", "--right", action="store_true", help="display on the right side")
     parser.add_argument("-s", type=int, default=20, help="menu icon size (int, min: 16, max: 48, def: 20)")
-    parser.add_argument("-t", type=int, default=50, help="menu timeout in milliseconds (int, def: 50)")
+    parser.add_argument("-d", type=int, default=50, help="menu delay in milliseconds (int, def: 50)")
     parser.add_argument("-o", type=float, default=0.3, help="overlay opacity (float, min: 0.0, max: 1.0, def: 0.3)")
     global args
     args = parser.parse_args()
@@ -119,8 +114,15 @@ def main():
     win.resize(w, h)
     win.menu = build_menu()
     win.show_all()
-    GLib.timeout_add(args.t, win.menu.popup_at_widget, win.button, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, None)
+    GLib.timeout_add(args.d, open_menu)
     Gtk.main()
+
+
+def open_menu():
+    if not swaymsg:
+        subprocess.run(['i3-msg', 'floating', 'toggle'], stdout=subprocess.DEVNULL)
+        subprocess.run(['i3-msg', 'border', 'pixel', '0'], stdout=subprocess.DEVNULL)
+    win.menu.popup_at_widget(win.button, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, None)
 
 
 def display_dimensions():
@@ -200,7 +202,6 @@ class DesktopEntry(object):
                 and self not in c_game and self not in c_graphics and self not in c_network \
                 and self not in c_office and self not in c_science and self not in c_settings \
                 and self not in c_system and self not in c_utility:
-
             c_other.append(self)
 
         groups = [c_audio_video, c_development, c_education, c_game, c_graphics, c_network, c_office, c_science,
