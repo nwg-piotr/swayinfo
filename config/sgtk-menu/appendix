@@ -1,0 +1,7 @@
+[
+  {
+    "name": "Reload",
+    "exec": "swaymsg reload",
+    "icon": "reload"
+  }
+]

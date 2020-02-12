@@ -1,0 +1,21 @@
+#separator {
+    margin: 10px;
+}
+#item-dmenu {
+    padding-left: 20px
+}
+#button {
+	background: none;
+	border-style: none;
+	box-shadow: none;
+	color: #999;
+}
+#button:hover {
+	background-color: rgba(255, 255, 255, 0.07);
+	color: #eee
+}
+#button:focus {
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgba(255, 255, 255, 0.2)
+}

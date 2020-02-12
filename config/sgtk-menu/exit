@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Logout",
+    "exec": "swaymsg exit",
+    "icon": "stock_task-assigned-to"
+  },
+  {
+    "name": "Lock",
+    "exec": "swaylock -f -c 000000",
+    "icon": "lock"
+  },
+  {
+    "name": "Reboot",
+    "exec": "systemctl reboot",
+    "icon": "reload"
+  },
+  {
+    "name": "Shutdown",
+    "exec": "systemctl -i poweroff",
+    "icon": "stock_down"
+  }
+]

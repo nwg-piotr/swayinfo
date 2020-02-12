@@ -47,8 +47,8 @@ set $gnome-schema org.gnome.desktop.interface
 		cursor-theme:gtk-cursor-theme-name
 
 # gaps
-	gaps inner 5
-	gaps outer 0
+	gaps inner 2
+	gaps outer 2
 
 # font
 	font pango:DejaVu Sans Mono 10
@@ -60,9 +60,9 @@ set $gnome-schema org.gnome.desktop.interface
 		exec light -S 20
 		exec amixer sset 'Master' 40%
 		exec obhud --touchpad off -c sway.conf
-		exec redshift
+		exec redshift -m wayland -l 52.25:22.12
 
-	  # exec nm-applet
+	  exec nm-applet
 
 	# Notifications
 		exec mako --icons 1 --markup 1 --actions 1 --padding 10 --background-color "#81a1c1" --default-timeout 10000
@@ -72,6 +72,9 @@ set $gnome-schema org.gnome.desktop.interface
 
 	# Autotiling
 		exec autotiling
+
+	# Scratchpad tray indicator
+	  exec_always /home/piotr/PycharmProjects/swayinfo/scratchpad_indicator.py 500
 
 	# Workaround to run Java swing (broken) applications (e.g. IntelliJ)
 		exec wmname LG3D
@@ -87,9 +90,11 @@ set $gnome-schema org.gnome.desktop.interface
 # `dmenu` is way faster than `wofi --show run`, but requires the wofi-wayland-git package (or use bemenu)
 # Note: it's recommended that you pass the final command to sway.
 #
-	set $menu dmenu_path | dmenu -h 25 -nb '#434c5e' -nf '#eeeeee' -sb '#8fbcbb' -sf '#434c5e' -fn 'DejaVu Sans Mono 10' -p 'run' | xargs swaymsg exec
+	# set $menu dmenu_path | dmenu-wl_run -h 37 -nb '#6b849e' -nf '#eeeeee' -sb '#8fbcbb' -sf '#434c5e' -fn 'DejaVu Sans Mono 11' | xargs swaymsg exec
+	set $menu sgtk-dmenu -c -d 30 | xargs swaymsg exec
 	# set $menu wofi --show run | xargs swaymsg exec
-	set $drun wofi -i --show drun | xargs swaymsg exec
+	# set $drun wofi -I --show drun | xargs swaymsg exec
+	set $drun sgtk-menu -f -a -c -d 30 | xargs swaymsg exec
 
 #
 # Output configuration:
@@ -163,7 +168,7 @@ exec swayidle -w \
 
 	# launchers
     bindsym Control+space exec $drun
-    bindsym mod1+F1 exec $drun
+    bindsym mod1+F1 exec sgtk-grid -f
 
 	# Drag floating windows by holding down $mod and left mouse button.
 	# Resize them with right mouse button + $mod.
@@ -176,7 +181,8 @@ exec swayidle -w \
     bindsym $mod+Shift+c reload
 
 	# logout script
-    bindsym $mod+x exec /home/piotr/.local/bin/wofi-exit.sh
+    # bindsym $mod+x exec /home/piotr/.local/bin/wofi-exit.sh
+    bindsym $mod+x exec sgtk-bar -p 15 -o 0.9 -s 96
 
 	# audio
 		bindsym XF86AudioRaiseVolume exec obhud --volume up
@@ -334,6 +340,12 @@ exec swayidle -w \
 	}
 	bindsym $mod+r mode "resize"
 
+	# Size
+	bindsym Mod1+Up    resize shrink height 10 px or 1 ppt
+	bindsym Mod1+Down  resize grow   height 10 px or 1 ppt
+	bindsym Mod1+Left  resize shrink width  10 px or 1 ppt
+	bindsym Mod1+Right resize grow   width  10 px or 1 ppt
+
 #
 # swaynagmode [AUR] adds keyboard support to swaynag
 #
@@ -393,8 +405,9 @@ exec swayidle -w \
 	for_window [title="Azote~"] floating enable, focus
 	for_window [title="Cheatsheet*"] floating enable, focus
 	for_window [title="feh*"] floating enable, focus
-	for_window [title="gThumb|Arch-update"] floating enable, focus
+	for_window [title="gThumb|Arch-update|Wybór daty*"] floating enable, focus
 	for_window [class="Chromium*"] floating disable, border none
+	# for_window [title="~sgtk*"] border none
 
 #
 # Status Bar(s):
@@ -406,5 +419,7 @@ bar {
 }
 
 bindsym Print exec sleep 5 && /home/piotr/.local/bin/screenshot fullscreen
-bindsym Control+Print exec sleep 5 && /home/piotr/.local/bin/screenshot display
-bindsym Shift+Control+Print exec sleep 5 && /home/piotr/.local/bin/screenshot region
+# bindsym Control+Print exec sleep 5 && /home/piotr/.local/bin/screenshot display
+bindsym Control+Print exec sleep 5 && swappy -g "0,0 1920x1080"
+# bindsym Shift+Control+Print exec sleep 5 && /home/piotr/.local/bin/screenshot region
+bindsym Shift+Control+Print exec grim -g "$(slurp)" - | swappy -f -

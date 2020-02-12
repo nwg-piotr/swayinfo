@@ -5,7 +5,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["custom/myweather", "custom/battery-warning"],
-    "modules-right": ["custom/arch", "custom/scratchpad", "clock", "backlight", "pulseaudio", "battery", "tray"],
+    "modules-right": ["custom/arch", "clock", "backlight", "pulseaudio", "battery", "tray"],
     "sway/window": {
         "max-length": 50
     },
@@ -22,11 +22,12 @@
     "clock": {
         "interval": 1,
         "format": "{:%a, %d. %b  %H:%M:%S}",
+        "on-click": "exec /home/piotr/PycharmProjects/swayinfo/calendar.py",
         "tooltip": false
     },
     "tray": {
-	    "icon-size": 18,
-	    "spacing": 10
+	    "icon-size": 20,
+	    "spacing": 4
 	},
 	"custom/arch": {
         "interval": 1800,
@@ -81,10 +82,15 @@
     "position": "bottom",
     "name": "waybar-bottom",
     "modules-center": ["network"],
-    "modules-left": ["custom/playerctl"],
+    "modules-left": ["custom/menu", "custom/playerctl"],
     "modules-right": ["custom/cpu", "custom/bbswitch", "custom/swayinfo"],
     "sway/window": {
         "max-length": 50
+    },
+    "custom/menu": {
+        "format": "  ",
+        "on-click": "sgtk-menu -a -f -l en -b -y 26",
+        "tooltip": false
     },
     "custom/cpu": {
         "interval": 3,
@@ -95,7 +101,7 @@
     "custom/swayinfo": {
         "interval": 5,
         "return-type": "text",
-        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CtMfNu -N -W0",
+        "exec": "/home/piotr/PycharmProjects/swayinfo/swayinfo.py -CtMfNu -N",
         "escape": true
     },
     "network": {
@@ -139,7 +145,7 @@
 {
     // SECONDARY TOP
     "output": "HDMI-A-1",
-    "layer": "top",
+    "layer": "bottom",
     "position": "top",
     "modules-left": ["sway/workspaces"]
 }]

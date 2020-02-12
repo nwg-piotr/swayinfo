@@ -5,11 +5,11 @@
     font-family: DejaVu sans;
     font-size: 14px;
     min-height: 24px;
+    padding-left: 1px
 }
 
 window#waybar {
     background-color: #151515;
-    border-bottom: 2px solid #26252a;
     color: #eee;
     transition-property: background-color;
     transition-duration: .5s;
@@ -19,6 +19,7 @@ window#waybar.waybar-bottom {
     background-color: #151515;
     border-bottom: 0px;
     color: #b47474;
+	font-family: DejaVu sans;
     transition-property: background-color;
     transition-duration: .5s;
 }
@@ -96,6 +97,11 @@ window#waybar.chromium {
     padding: 0 2px;
     margin: 0 2px;
     color: #eee;
+    font-family: "DejaVuSansMono Nerd Font"
+}
+
+#custom-swayinfo {
+	font-family: "DejaVuSansMono Nerd Font"
 }
 
 #custom-myweather {
@@ -109,9 +115,10 @@ window#waybar.chromium {
 }
 
 #clock {
-
+	font-family: "Liberation Sans";
 	padding: 0 10px 0 10px;
-	background-color: #357978;
+	font-size: 17px;
+	font-weight: bold;
 	color: #eee;
 }
 
@@ -121,7 +128,7 @@ window#waybar.chromium {
 }
 
 #battery.charging {
-    border-bottom: 3px solid #a8bcba;
+    border-bottom: 2px solid #a8bcba;
 }
 
 @keyframes blink {

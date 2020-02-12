@@ -23,12 +23,12 @@
        mouse into it, also raise the window -->
   </focus>
   <placement>
-    <policy>Smart</policy>
+    <policy>UnderMouse</policy>
     <!-- 'Smart' or 'UnderMouse' -->
     <center>yes</center>
     <!-- whether to place windows in the center of the free area found or
        the top left corner -->
-    <monitor>Primary</monitor>
+    <monitor>Mouse</monitor>
     <!-- with Smart placement on a multi-monitor system, try to place new windows
        on: 'Any' - any monitor, 'Mouse' - where the mouse is, 'Active' - where
        the active window is, 'Primary' - only on the primary monitor -->
@@ -177,16 +177,33 @@
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
     <keybind key="C-A-Left">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>left</to>
+        <wrap>no</wrap>
+      </action>
     </keybind>
     <keybind key="C-A-Right">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>right</to>
+        <wrap>no</wrap>
+      </action>
+    </keybind>
+    <keybind key="C-A-BackSpace">
+      <action name="Execute">
+        <command>oblogout</command>
+      </action>
     </keybind>
     <keybind key="C-A-Up">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>up</to>
+        <wrap>no</wrap>
+      </action>
     </keybind>
     <keybind key="C-A-Down">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>down</to>
+        <wrap>no</wrap>
+      </action>
     </keybind>
     <keybind key="S-A-Left">
       <action name="SendToDesktop">
@@ -209,16 +226,34 @@
       </action>
     </keybind>
     <keybind key="W-F1">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>1</to>
+      </action>
+    </keybind>
+    <keybind key="A-F1">
+      <action name="Execute">
+        <command>sgtk-grid -f -t 10 -b 40</command>
+      </action>
+    </keybind>
+    <keybind key="W-x">
+      <action name="Execute">
+        <command>sgtk-bar -bf exit-ob -o 0.9</command>
+      </action>
     </keybind>
     <keybind key="W-F2">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>2</to>
+      </action>
     </keybind>
     <keybind key="W-F3">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>3</to>
+      </action>
     </keybind>
     <keybind key="W-F4">
-      <action name="GoToDesktop"/>
+      <action name="GoToDesktop">
+        <to>4</to>
+      </action>
     </keybind>
     <keybind key="W-d">
       <action name="ToggleShowDesktop"/>
@@ -232,9 +267,9 @@
       <action name="Unfocus"/>
     </keybind>
     <keybind key="A-space">
-      <action name="Execute">
-          <command>/home/piotr/PycharmProjects/sgtk-menu/sgtk-menu/menu.py -m -af appendix-ob -fn 5</command>
-        </action>
+      <action name="ShowMenu">
+        <menu>client-menu</menu>
+      </action>
     </keybind>
     <keybind key="A-Tab">
       <action name="NextWindow"/>
@@ -260,29 +295,13 @@
     <keybind key="W-S-Down">
       <action name="DirectionalCycleWindows"/>
     </keybind>
-    <keybind key="C-A-BackSpace">
+    <keybind key="W-e">
       <action name="Execute">
-        <command>slock</command>
-      </action>
-    </keybind>
-    <keybind key="W-S-c">
-      <action name="Execute">
-        <command>xrdb ~/.Xresources</command>
-      </action>
-    </keybind>
-    <keybind key="Print">
-      <action name="Execute">
-        <command>flameshot full -p ~/Pictures</command>
-      </action>
-    </keybind>
-    <keybind key="C-Print">
-      <action name="Execute">
-        <command>/usr/bin/flameshot gui</command>
-      </action>
-    </keybind>
-    <keybind key="C-A-Delete">
-      <action name="Execute">
-        <command>oblogout</command>
+        <command>mousepad</command>
+        <startupnotify>
+          <enabled>yes</enabled>
+          <name>Konqueror</name>
+        </startupnotify>
       </action>
     </keybind>
     <keybind key="XF86MonBrightnessDown">
@@ -330,66 +349,36 @@
         <command>obhud --screens switch</command>
       </action>
     </keybind>
+    <keybind key="W-D">
+      <action name="Execute">
+        <command>sgtk-dmenu</command>
+      </action>
+    </keybind>
     <keybind key="S-W-P">
       <action name="Execute">
-        <command>obhud --screens switch</command>
+        <command>obhud --screens switchv</command>
       </action>
     </keybind>
-    <keybind key="W-T">
+    <keybind key="Print">
       <action name="Execute">
-        <command>alacritty</command>
+        <command>flameshot screen -p ~/Obrazy</command>
       </action>
     </keybind>
-    <keybind key="W-E">
+    <keybind key="C-Print">
       <action name="Execute">
-        <command>mousepad</command>
+        <command>flameshot gui</command>
       </action>
     </keybind>
-    <keybind key="W-C">
+    <keybind key="S-C-Print">
       <action name="Execute">
-        <command>azote</command>
-      </action>
-    </keybind>
-    <keybind key="W-W">
-      <action name="Execute">
-        <command>chromium</command>
-      </action>
-    </keybind>
-    <keybind key="W-1">
-      <action name="GoToDesktop">
-          <to>1</to>
-      </action>
-    </keybind>
-    <keybind key="W-2">
-      <action name="GoToDesktop">
-          <to>2</to>
-      </action>
-    </keybind>
-    <keybind key="W-3">
-      <action name="GoToDesktop">
-          <to>3</to>
-      </action>
-    </keybind>
-    <keybind key="W-4">
-      <action name="GoToDesktop">
-          <to>4</to>
-      </action>
-    </keybind>
-    <keybind key="W-X">
-      <action name="Execute">
-          <command>oblogout</command>
-      </action>
-    </keybind>
-    <keybind key="A-F1">
-      <action name="Execute">
-          <command>sgtk-menu -af appendix-ob -fn 4</command>
+        <command>flameshot screen -p ~/Obrazy</command>
       </action>
     </keybind>
   </keyboard>
   <mouse>
     <dragThreshold>1</dragThreshold>
     <!-- number of pixels the mouse must move before a drag begins -->
-    <doubleClickTime>490</doubleClickTime>
+    <doubleClickTime>500</doubleClickTime>
     <!-- in milliseconds (1000 = 1 second) -->
     <screenEdgeWarpTime>400</screenEdgeWarpTime>
     <!-- Time before changing desktops when the pointer touches the edge of the
@@ -493,8 +482,10 @@
         <action name="Unfocus"/>
       </mousebind>
       <mousebind action="Press" button="Right">
-        <action name="Execute">
-          <command>/home/piotr/PycharmProjects/sgtk-menu/sgtk-menu/menu.py -c -af appendix-ob -fn 5</command>
+        <action name="Focus"/>
+        <action name="Raise"/>
+        <action name="ShowMenu">
+          <menu>client-menu</menu>
         </action>
       </mousebind>
     </context>
@@ -528,8 +519,8 @@
       <mousebind action="Press" button="Right">
         <action name="Focus"/>
         <action name="Raise"/>
-        <action name="Execute">
-          <command>/home/piotr/PycharmProjects/sgtk-menu/sgtk-menu/menu.py -c -af appendix-ob -fn 5</command>
+        <action name="ShowMenu">
+          <menu>client-menu</menu>
         </action>
       </mousebind>
     </context>
@@ -562,15 +553,15 @@
         <action name="Focus"/>
         <action name="Raise"/>
         <action name="Unshade"/>
-        <action name="Execute">
-          <command>/home/piotr/PycharmProjects/sgtk-menu/sgtk-menu/menu.py -c -af appendix-ob -fn 5</command>
+        <action name="ShowMenu">
+          <menu>client-menu</menu>
         </action>
       </mousebind>
       <mousebind action="Press" button="Right">
         <action name="Focus"/>
         <action name="Raise"/>
-        <action name="Execute">
-          <command>/home/piotr/PycharmProjects/sgtk-menu/sgtk-menu/menu.py -c -af appendix-ob -fn 5</command>
+        <action name="ShowMenu">
+          <menu>client-menu</menu>
         </action>
       </mousebind>
     </context>
@@ -691,7 +682,7 @@
       </mousebind>
       <mousebind action="Press" button="Right">
         <action name="Execute">
-          <command>sgtk-menu -af appendix-ob -fn 4</command>
+          <command>sgtk-menu -f -af appendix-ob</command>
         </action>
       </mousebind>
     </context>
