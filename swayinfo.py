@@ -248,7 +248,13 @@ def main():
         if char == "t" and temp is not None and len(temp) > 0:
             if names:
                 output += c_name if c_name else ""
-            output += str(temp["coretemp"][0][1]).split(".")[0]
+            if "k10temp" in temp.keys():
+                # ryzen, multiple Die temperatures for threadripper/Epyc
+                ryzen_die_temps = [sensor.current for sensor in temp["k10temp"] if sensor.label == 'Tdie']
+                output += str(int(max(ryzen_die_temps)))
+            if "coretemp" in temp.keys():
+                # intel
+                output += str(int(temp["coretemp"][0][1]))
             output += "℉" if fahrenheit else "℃"
             output += separator
 
