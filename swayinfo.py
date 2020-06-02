@@ -252,7 +252,14 @@ def main():
                 # ryzen, multiple Die temperatures for threadripper/Epyc
                 ryzen_die_temps = [sensor.current for sensor in temp["k10temp"] if sensor.label == 'Tdie']
                 output += str(int(max(ryzen_die_temps)))
-            if "coretemp" in temp.keys():
+                try:
+                    if "amdgpu" in temp.keys():
+                        gpu_mem_temp = [sensor.current for sensor in temp["amdgpu"] if sensor.label == 'mem']
+                        output += "|{}".format(str(int(max(gpu_mem_temp))))
+                except:
+                    pass
+
+            elif "coretemp" in temp.keys():
                 # intel
                 output += str(int(temp["coretemp"][0][1]))
             output += "℉" if fahrenheit else "℃"

@@ -5,7 +5,7 @@
 l=$(acpi | awk -F ',' '{print $2}')
 if [[ ! -z "$l" ]]; then
     level=${l:1:-1}
-    threshold=40
+    threshold=30
     if [[ "$level" -lt "$threshold" ]]; then
 	    echo -e "\n*** BATTERY LEVEL$l, CONNECT AC! ***\n"
     fi
